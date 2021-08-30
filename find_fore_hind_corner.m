@@ -29,34 +29,19 @@ if strcmp(slopeSwitch,'cenAxis')
 else
     [wingVector, tanRefPt] = findWingVector(maskf2,realCen,boundingBox,verVector,part); %The function to find wind edge vector
     disp('Using automatically detected slope of the wing edge as the vector');
-    %disp(['Parameter [wingVector]: ',num2str(beltWpar)]);
-    %disp(['Parameter [tanRefPt]: ',num2str(tanRefPt)]);
 end
-
-% tt=[realCen+wingVector;realCen-wingVector];
-% figure,imshow(maskf2);hold on;
-% plot(tt(:,1),tt(:,2),'r');
 
 %%
 %Derive the belt information
 beltwidth=boundingBox(3)*beltWpar;
-
-%if boundingBox(3)/boundingBox(4)>2
-    %beltheight=boundingBox(4)*0.15;
-%else boundingBox(3)/boundingBox(4)>0.5
-    beltheight=boundingBox(4)*beltHpar;
-%end
+beltheight=boundingBox(4)*beltHpar;
 beltupper=[realCen+[0 +round(beltheight/2)]-horVector ; realCen+[0 +round(beltheight/2)]+horVector];
 beltlower=[realCen+[0 -round(beltheight/2)]-horVector ; realCen+[0 -round(beltheight/2)]+horVector];
 horBeltRegion=[beltupper;flip(beltlower,1)];
 
-
+%preserved for visualization when debugging
 % figure,imshow(maskf2);hold on;
 % plot(horBeltRegion(:,1),horBeltRegion(:,2),'r');
-
-%horSolvB=[-horVector(2)/horVector(1);1];
-%beltlowerB=dot(beltlower(1,:),horSolvB);
-%beltlowerLine=[horVector(2)/horVector(1); beltlowerB];
 %%
 %Find all edge points
 [specimenB,~]=bwboundaries(mask);
@@ -171,7 +156,6 @@ while size(closest2Pts,1)<2
     %The 2 intersect points on the target segment line
     closest2Pts=intersectDistPts(intersectDistPts(:,1)==intersectLoc2,2:end);
      if intersectLoc2>intersectLoc+2 || intersectLoc2>length(segPt2UL)
-%          disp(['[intersectLoc2]: ',num2str(intersectLoc2)]);
          break
      else
         intersectLoc2=intersectLoc2+1;

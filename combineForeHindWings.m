@@ -24,7 +24,7 @@ elseif sideInd==2 %Right wings
 end
 
 moveDis=forRef-hindRef;
-if moveDis(1)<0 || moveDis(2)<0 %If hte moving direction is negetive, keping the full size will chnge the coordination of the target object
+if moveDis(1)<0 || moveDis(2)<0 %If hte moving direction is negetive, keeping the full size will change the coordinate of the target object
     mvhindImg = imtranslate(hindImg,moveDis);
     disp('Full output view is NOT applied since variable [moveDis] containing negative value.');
 else

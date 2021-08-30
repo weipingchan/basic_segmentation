@@ -1,11 +1,12 @@
 function [com, mainAxis,secAxis]=findSymetricAxes(inImg)
+%A function to detect the vertical and horizaontal symmetric axes of a
+%given image
 if size(inImg,3)>1, inImg=rgb2gray(inImg); end
 imd=transpose(inImg);
 [nx,ny] = size(imd);
 Range_ny=1:ny;
 Range_nx=1:nx;
-%points = sortrows(transpose(combvec(Range_nx,Range_ny)),[1,2],{'ascend','descend'}); %works for 2017a
-points = sortrows(transpose(combvec(Range_nx,Range_ny)),[1, -2]); %for 2016b and 2017a
+points = sortrows(transpose(combvec(Range_nx,Range_ny)),[1, -2]); %for Matlab 2016b and 2017a
 weights =  transpose(reshape(imd.',1,[]));
 mass = sum(weights);
 com = sum(points .* weights) ./ mass;

@@ -1,19 +1,18 @@
 function [wingParts,refPts]=segWings(mask,realCen,segPts)
-%segPts=[forehindCornerL;conjCornerLF;conjCornerRF;forehindCornerR;conjCornerRH;conjCornerLH];
+%Use detected landmark on wing mask to segment wing pieces
+%In this funciont, manually defined fore-hindwing boundaries were not
+%included; only solid lines are used
 extendLength=max(size(mask));
 LWingLineSeg=[segPts(2,:);segPts(6,:)];
-%LWingVector=(LWingLineSeg(1,:)-LWingLineSeg(2,:))*max(size(partMask));
 LWingLine=seg2line(LWingLineSeg,extendLength);
 
 RWingLineSeg=[segPts(3,:);segPts(5,:)];
-%RWingVector=(RWingLineSeg(1,:)-RWingLineSeg(2,:))*max(size(partMask));
 RWingLine=seg2line(RWingLineSeg,extendLength);
 
 LFHCenLineSeg=[segPts(1,:);realCen];
 RFHCenLineSeg=[segPts(4,:);realCen];
 
 LFcropLineSeg=segPts(1:2,:);
-%LFcropVector=(LFcropLineSeg(1,:)-LFcropLineSeg(2,:))*max(size(partMask));
 LFcropLine=seg2line(LFcropLineSeg,extendLength);
 
 LHcropLineSeg=[segPts(6,:);segPts(1,:)];

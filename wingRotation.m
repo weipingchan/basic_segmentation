@@ -1,4 +1,5 @@
 function [tformWingImg, tformPtData]=wingRotation(wingParts,WingAxesSlopes,refPts)
+%A funciton to rotate each piece of wings and the corresponding coordinates of key points
 wingPartNameList={'Left Fore Wing','Left Hind Wing','Right Fore Wing','Right Hind Wing'};
     tformWingImg=cell(size(wingParts,2),0);
     tformPtData=cell(size(wingParts,2),0);

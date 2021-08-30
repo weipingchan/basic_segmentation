@@ -9,7 +9,6 @@ partMask0=bwareaopen(imdilate(imerode(partMask,strel('disk',trimPx0)),strel('dis
 [upspecimenB00,~]=bwboundaries(partMask0);
 upperEdgePt00=upspecimenB00{1};
 %%
-
 %Calculate necessary vectors
  if symAxis(2)<0 symAxis=-symAxis;, end;
 verVector=symAxis*max(size(partMask));
@@ -64,8 +63,6 @@ upperEdgePt0=upspecimenB0{1};
 [B0,~]=bwboundaries(maskf);
 edgePt=B0{1};
 %%
-
-%Here LeftRight indicate the position of the wing being analyzed
 %Detect all salinent points
 corners = detectHarrisFeatures(partMask2);
 if size(corners,1)<nStrongCorners*2/3 %Legacy line
@@ -77,19 +74,14 @@ else
 end
 
 %%
-%Derive the belt information
-%beltheight=boundingBox(4)*0.2;
+%Derive the belt information; the belt should include the left and right fore-hindwing gaps for automatic detection
 beltwidth=boundingBox(3)*beltWpar;
 
 beltL=[realCen+[+round(beltwidth/2) 0]-verVector ; realCen+[+round(beltwidth/2) 0]+verVector];
 beltR=[realCen+[-round(beltwidth/2) 0]-verVector ; realCen+[-round(beltwidth/2) 0]+verVector];
 verBeltRegion=[beltL;flip(beltR,1)];
 %%
-%Determine the range near to the tarCorner that shouldn't have intersecting points in it
 emptyRegionLength=50;
-%emptyupper=[tarCorner+[round(emptyRegionLength/2) round(emptyRegionLength/2)] ; tarCorner+[-round(emptyRegionLength/2) round(emptyRegionLength/2)]];
-%emptylower=[tarCorner+[-round(emptyRegionLength/2) -round(emptyRegionLength/2)] ; tarCorner+[round(emptyRegionLength/2) -round(emptyRegionLength/2)]];
-%emptyRegion=[emptyupper;emptylower];
 
 %%
 %Calculate the slope of tarCorner and centroid
@@ -107,7 +99,6 @@ else
     tarCorner0=tarCorner+10*[-1 1];
 end
 
-%tarCorner0=tarCorner+10*sign(-usDL); 
 %%
 %Derive slopes of all evenly spaced angle
 Ls2cen=findSlopesForEvenAngle2(symAxis,uSlopeL,nSection,LeftRightForeHind);
@@ -175,11 +166,7 @@ intersectSegCountDiff2=[intersectSegCountDiff,0];
 intersectSegCountDiff2(intersectSegCountDiff2<0)=-1; %The decrease of  segments represents the end of the front end edge
 
 %Use all three indicies to determine the target segment line
-%[[1:length(intersectDistPtsCount2)];intersectDistPtsCount2;intersectSegCountDiff2;intersectShortestDistDiff4]
 intersectLocList=find(intersectDistPtsCount2.*intersectSegCountDiff2.*intersectShortestDistDiff4<=-2);
-
-%The 2 intersect points on the target segment line
-%closest2Pts=intersectDistPts(intersectDistPts(:,1)==intersectLoc,2:end);
 
 blockPts=cell(0,1);
 ceid=1;
@@ -220,6 +207,7 @@ for locn=1:length(intersectLocList)
     end
 end
 
+%This script is preserved for visualization when debugging
 %     figure,imshow(partMask);hold on;
 %     plot(block0(:,1),block0(:,2),'r')
 %     plot(block1(:,1),block0(:,1),'r')
@@ -243,18 +231,6 @@ leftconjCorners1=blockPts{groupid};
 [inMask,~] = inpolygon(leftconjCorners1(:,1),leftconjCorners1(:,2),upperEdgePt00(:,2),upperEdgePt00(:,1));
 leftconjCorners1(inMask,:)=[];
 %%
-%The closest point to those image corners should be our target
-% if LeftRightForeHind=='LF'
-%     comCorner=[1, 1];
-% elseif LeftRightForeHind=='RF'
-%     comCorner=[size(partMask,2), 1];
-% elseif LeftRightForeHind=='LH'
-%     comCorner=[1,size(partMask,1)];
-% else
-%     comCorner=size(partMask);
-% end
-
-%This part is added March 15, 2020
 %Calculate the distance to symOrtho at realCen
 d2orthoVec=point_to_line_distance(leftconjCorners1, realCen+symOrtho, realCen-symOrtho);
 
@@ -304,22 +280,6 @@ else %If no consensus in two index, then use the first rule
 end
 
 conjCorners=findCloestPt([edgePt(:,2),edgePt(:,1)],conjCorners0); %Find the corresponding Pt on the real edge
-
-% %This part is added Dec 15, 2019
-% if LeftRightForeHind=='LF'
-%     conjCorners=leftconjCorners1(1,:);
-% elseif LeftRightForeHind=='RF'
-%     conjCorners=leftconjCorners1(1,:);
-% elseif LeftRightForeHind=='LH'
-%     conjCorners=findCloestPt(leftconjCorners1,realCen);
-% else
-%     conjCorners=findCloestPt(leftconjCorners1,realCen); %This is the original one
-% end
-
-%compute Euclidean distances:
-%distances = sqrt(sum(bsxfun(@minus, leftconjCorners0,comCorner).^2,2));
-%find the smallest distance and use that as an index into B:
-%conjCorners = leftconjCorners0(distances==min(distances),:);
 
 if ~isempty(conjCorners)
     disp('Find the key point.');

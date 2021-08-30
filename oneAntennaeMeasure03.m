@@ -1,8 +1,8 @@
 function [bolbMorph,antFig,tipAntenae,tipAnt]=oneAntennaeMeasure03(mask, forkPt00, oneAntenae,antL0,antennaeBase0)
+%A funciton to measure the morphology of one antenna
+
         antennae = oneAntenae;
         %%
-        %find the head instead of fork point
-%         headTipPt=findHeadTip(body);
         forkPt=forkPt00;
         
         %%
@@ -16,10 +16,6 @@ function [bolbMorph,antFig,tipAntenae,tipAnt]=oneAntennaeMeasure03(mask, forkPt0
             distanceAnt=[distanceAnt; [i(n),j(n),Dd(i(n),j(n))]];
         end
         Dist = sqrt(sum(bsxfun(@minus, distanceAnt(:,1:2), flip(forkPt)).^2,2));
-%         forkCandidates=distanceAnt(Dist<mean(Dist)+std(Dist)*2/3,1:2);
-        
-%         forkPt2=flip(mean(forkCandidates));
-%         Dist2 = sqrt(sum(bsxfun(@minus, distanceAnt(:,1:2), flip(forkPt2)).^2,2));
         scalelist=[2/3,3/5,1/2,2/5];
         scaleID=1;
         while 1
@@ -30,14 +26,6 @@ function [bolbMorph,antFig,tipAntenae,tipAnt]=oneAntennaeMeasure03(mask, forkPt0
                 scaleID=scaleID+1;
             end
         end
-%         antennaTipDist2= distanceAnt(distanceAnt(:,3)==max(distanceAnt(:,3)),:);    
-
-%         bolbMorph=-9999 + zeros(1, 3);
-%         if antennaTipDist2(1,2)<realCen(1)
-%             rfAnt=1;
-%         else
-%             rfAnt=2;
-%         end
         tipAnt= antennaTipDist2(1,1:2);
         if ~isempty(antL0) %Set up the condition flag
             if antL0>0
@@ -74,9 +62,7 @@ function [bolbMorph,antFig,tipAntenae,tipAnt]=oneAntennaeMeasure03(mask, forkPt0
         antB=regionprops(antennae,'Area','Perimeter');
         meanW= antB.Area/antL;
         basetipdist=pdist([tipAnt;antennaeBase],'euclidean');
-        curveDegree=antL/basetipdist;
-%         meanW= (antB.Perimeter - sqrt(antB.Perimeter^2-4*2*antB.Area))/(2*2);     %Do average width: regionProp ->  w = (P - sqrt(P^2-4*2*A))/(2*2)
-        
+        curveDegree=antL/basetipdist;        
         tipMask = createCirclesMask(mask, flip(tipAnt), antL/5);     %Create tip mask again (use 1/5 of total length), and use regionProp find width
         tipAntenae=bwareafilt(logical(immultiply(antennae,tipMask)),1);
         bolbB=regionprops(tipAntenae,'MinorAxisLength');
@@ -84,7 +70,7 @@ function [bolbMorph,antFig,tipAntenae,tipAnt]=oneAntennaeMeasure03(mask, forkPt0
         bolbMorph=[antL,meanW, bolbW, curveDegree];
         antFig=double(mask*0.1+antennae*0.8); 
         
-%         %Plot antenna
+%         %Plot antenna; script is preserved for visualization when debugging
 %         antFig=figure('visible', 'off');
 %         imshow(labeloverlay(double(mask*0.1+antennae*0.5),It,'Colormap','autumn','Transparency',0));hold on;
 %         plot( forkPt2(:,1), forkPt(:,2),'bO');

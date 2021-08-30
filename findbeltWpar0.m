@@ -6,7 +6,7 @@ if RF=='R'
     Rseries=sortrows(Rseries);
     panelLimit=floor(abs(forehindCornerA(1)-round(realCen(1))));
 else
-%For Right
+%For Left
     Rseries=ferqSeries0(ferqSeries0(:,1)<0,:);
     Rseries(:,1)=abs(Rseries(:,1));
     Rseries=sortrows(Rseries);

@@ -1,12 +1,6 @@
 function [realCen, symAxis, symOrtho, boundingBox,  tipPts, refPts, wingParts, WingAxesSlopes, tformWingImg, shapeImg, allComImg, allinfo]=wingShapePreprocessing2(template,flag,mask,spp_json_directory,Result_directory,subFolderList,side,Sphingidae)
 vdlist={'dorsal','ventral'};
-%[specimenB,~]=bwboundaries(mask);
-%sppEdgePt=specimenB{1};
-%skeletonMask = bwmorph(mask,'skel',Inf);
-% maskf=imfill(mask,'holes');
 maskf=mask;
-%maskf2=bwareafilt(imdilate(bwareafilt(imfill(imerode(mask,strel('disk',5)),'hole'),2),strel('disk',2)),1);%Used for reduced area
-
 %Find the symetric axis
 [symCentroid,symAxis,~]=findSymetricAxes(maskf);
 disp('The symatric axis has been found.');
@@ -33,7 +27,6 @@ disp('The symatric axis has been found.');
 
  %Calculated the difference between two centroids
  cenDiff=pdist([regioncen;cenregioncen],'euclidean');
- %cenDiffRatio=cenDiff/min(boundingBox(3:4));
  
  %Pick the most suitable one
  if cenDiff<50
@@ -60,24 +53,21 @@ dim_1plot=[realCen(1),dim_1(1);realCen(2),dim_1(2)];
 dim_2=realCen+symOrtho*size(maskf,1)/9;
 dim_2plot=[realCen(1),dim_2(1);realCen(2),dim_2(2)];
 
-%figure,imshow(mask)
 inspoutname=fullfile(Result_directory,'Shape_analysis',subFolderList{1},[template,'_',vdlist{side},flag,'_primary_key_pts.png']);
 figinsp=figure('visible', 'off');
 imshowpair(maskf,cenregion);
 hold on;
 plot(symCentroid(1),symCentroid(2),'y*');
 plot(symCentroid(1),symCentroid(2),'bo');
-%plot(symSkeletonCentroid(1),symSkeletonCentroid(2),'yo');
+%plot(symSkeletonCentroid(1),symSkeletonCentroid(2),'yo'); %Turn this on if the user wants to see this reference point
 plot(regioncen(1),regioncen(2),'b*');
 plot(cenregioncen(1), cenregioncen(2),'r+');
 line(dim_1plot(1,:),dim_1plot(2,:), 'Color', 'r' ,'LineWidth', 1);
 line(dim_2plot(1,:),dim_2plot(2,:), 'Color', 'b' ,'LineStyle','--','LineWidth', 1);
 plot(allFrameCorners(:,1),allFrameCorners(:,2),'y+');
-%rectangle('Position', boundingBox, 'EdgeColor','w','LineStyle','-.', 'LineWidth', 1);
-%plot(realCen(1),realCen(2),'ro','LineWidth', 2);
+%rectangle('Position', boundingBox, 'EdgeColor','w','LineStyle','-.', 'LineWidth', 1); %Turn this on if the user wants to see this bounding box
+%plot(realCen(1),realCen(2),'ro','LineWidth', 2); %Turn this on if the user wants to see the centroid
 hold off;
-%saveas(figmask, maskoutname);
-%print(figinsp,inspoutname,'-dpng','-r150'); %Use print to save high quality images
 export_fig(figinsp,inspoutname, '-png','-r150');
 close(figinsp);
 disp('An image indcating the primary key points of specimen image has been saved.');
@@ -87,21 +77,14 @@ maskoutname=fullfile(Result_directory,'Shape_analysis',subFolderList{2},[templat
 figmask=figure('visible', 'off');
 imshow(maskf);
 hold on;
-%plot(segPts(:,1),segPts(:,2),'r+');
-%plot(forehindCornerR(:,1),forehindCornerR(:,2),'r*');
-%plot(forehindCornerL(:,1),forehindCornerL(:,2),'r*');
 plot(realCen(:,1),realCen(:,2),'bo','LineWidth', 1);
 line(dim_1plot(1,:),dim_1plot(2,:), 'Color', 'b' ,'LineWidth', 1);
 line(dim_2plot(1,:),dim_2plot(2,:), 'Color', 'b' ,'LineStyle','--','LineWidth', 1);
 hold off;
-%saveas(figmask, maskoutname);
-%print(figmask,maskoutname,'-dpng','-r150'); %Use print to save high quality images
 export_fig(figmask,maskoutname, '-png','-r150');
 close(figmask);
 disp('An image indcating the mask and centroid of specimen image has been saved.');
 %%
-%beltheight=boundingBox(4)*0.25;
-%beltwidth=boundingBox(3)*0.15;
 %Use erosion mask to prevent the interference of long tail
  if cenDiff>=50
     boundingBoxDV= boundingBoxErosion;
@@ -114,8 +97,8 @@ disp('An image indcating the mask and centroid of specimen image has been saved.
  end
 disp('########## Begin to find the corner between Fore and Hing wings. #########');
 disp('Begin to find the corner between Left fore and hing wings.');
-nStrongCornersList=[500,1000,2000,3000,4000]; %[500,1000,2000,4000];
-nSectionList=[60:-5:20]; %number of elements should greater than 4  ([20:5:50];)
+nStrongCornersList=[500,1000,2000,3000,4000]; %shoter trail list can be applicable: [500,1000,2000,4000];
+nSectionList=[60:-5:20]; %number of elements in the list should greater than 4  ([20:5:50];)
 
 slopeSwitch='wingEdge';
 [conjPt,forehindCorner,~]=findForeHindCorner(nStrongCornersList,nSectionList,maskf,realCen,symAxis,ulCornerDV,boundingBoxDV,slopeSwitch);
@@ -137,7 +120,6 @@ forehindCornerR=conjPt;
 disp('The corner between Right fore and hing wings has been found.');
 disp('########## Two corners between Fore and Hing wings are found. #########');
 %%
-%%
 %Show the inspection image
 maskoutname1=fullfile(Result_directory,'Shape_analysis',subFolderList{1},[template,'_',vdlist{side},flag,'_check_img.png']);
 figmask1=figure('visible', 'off');
@@ -149,8 +131,6 @@ plot(realCen(:,1),realCen(:,2),'bo','LineWidth', 2);
 line(dim_1plot(1,:),dim_1plot(2,:), 'Color', 'b' ,'LineWidth', 1);
 line(dim_2plot(1,:),dim_2plot(2,:), 'Color', 'b' ,'LineStyle','--','LineWidth', 1);
 hold off;
-%saveas(figmask, maskoutname);
-%print(figmask1,maskoutname1,'-dpng','-r150'); %Use print to save high quality images
 export_fig(figmask1,maskoutname1, '-png','-r150');
 close(figmask1);
 disp('An image indcating the mask and fore hind wing corners has been saved.');
@@ -174,8 +154,7 @@ disp('Upper and lower mask have been croped out based on the fore-hing wing corn
 disp('########## Start to find the corner between Wing and body. ##########');
 disp('Begin to find the corner between Left-Fore wing and body.');
 %Left fore wing
-nStrongCornersList=[1000,1500,2000,3000,4000]; %[1000,1500,2000,4000];
-%nSectionList=[20:4:40]; %number of elements should greater than 4 (lower section number is more conservative; finding shorter but better edge length)
+nStrongCornersList=[1000,1500,2000,3000,4000]; %shoter trail list can be applicable: [1000,1500,2000,4000];
 nSectionList=reshape( [[20:4:50];[50:-4:20]],1,[]); %use a mix parameter lists low-high + high-low to searching for better results
 [conjPt, conjCorners]=findBodyWingCorner2(nStrongCornersList,nSectionList,upperMask,realCen,symAxis,forehindCornerL,'LF',boundingBox,beltWpar,maskf);
 conjCornerLF=conjPt;
@@ -189,7 +168,7 @@ disp('The corner between Right-Fore wing and body has been found.');
 
 disp('Begin to find the corner between Left-Hind wing and body.');
 %Left hind wing
-nSectionList=[20:4:40]; %number of elements should greater than 4
+nSectionList=[20:4:40]; %number of elements in the list should greater than 4
 [conjPt, conjCorners]=findBodyWingCorner2(nStrongCornersList,nSectionList,lowerMask,realCen,symAxis,forehindCornerL,'LH',boundingBox,beltWpar,maskf);
 conjCornerLH=conjPt;
 disp('The corner between Left-Hind wing and body has been found.');
@@ -201,7 +180,7 @@ conjCornerRH=conjPt;
 disp('The corner between Right-Hind wing and body has been found.');
 disp('########## All landmark corners are found. ##########');
 
-%Integrate the landmark points: (L-ForeHind Corner, L-Fore-Body corner, R-Fore-Body corner, R-Fore-Hind Corner,R-Hind-Body corner, L-Hind-Body corner)
+%Integrate the landmark points: (Left-ForeHind Corner, Left-Fore-Body corner, Right-Fore-Body corner, Right-Fore-Hind Corner,Right-Hind-Body corner, Left-Hind-Body corner)
 segPts=[forehindCornerL;conjCornerLF;conjCornerRF;forehindCornerR;conjCornerRH;conjCornerLH];
 
 
@@ -214,6 +193,8 @@ disp('########## The slope of long axes of wings are determined. ##########');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %For Sphingidae use this approach to derive the wingAxesSlopes (no hind wing rotation)
 %Sphingidae=1; %1: Sphingidae; 0: not Sphingidae
+%This argument won't influence the final result. It only changes the
+%visualization of preliminary analysis
 if Sphingidae==1
     WingAxesSlopes(2)=0;
     WingAxesSlopes(4)=0;
@@ -229,7 +210,6 @@ imshowpair(mask,cenregion);
 hold on;
 plot(symCentroid(1),symCentroid(2),'bo');
 plot(symCentroid(1),symCentroid(2),'y+','LineWidth', 1);
-%plot(symSkeletonCentroid(1),symSkeletonCentroid(2),'yo');
 plot(regioncen(1),regioncen(2),'b*');
 plot(cenregioncen(1), cenregioncen(2),'r+');
 line(dim_1plot(1,:),dim_1plot(2,:), 'Color', 'r' ,'LineWidth', 1);
@@ -242,14 +222,10 @@ plot(allFrameCorners(:,1),allFrameCorners(:,2),'y+');
 plot(tipPts(:,1),tipPts(:,2),'yd','LineWidth', 1);
 plot(tipPts(:,1),tipPts(:,2),'y+','LineWidth', 1);
 hold off;
-%saveas(figmask, maskoutname);
-%print(figchar,charoutname,'-dpng','-r150'); %Use print to save high quality images
 export_fig(figchar,charoutname, '-png','-r150');
 close(figchar);
 disp('An image indcating all key characters of specimen image has been saved.');
 %%
-%wingPartNameList={'Left Fore Wing','Left Hind Wing','Right Fore Wing','Right Hind Wing'};
-%Segment the wings: (LeftFore, LeftHind, RightFore, RightHind)
 disp('########## Start to chop four wing parts out of the image. ##########');
 %find if there is a corresponding json file
 json_ds = struct2dataset(dir(fullfile(spp_json_directory,[template,'_',vdlist{side},'*.json'])));
@@ -274,6 +250,7 @@ else
     [wingParts,refPts]=segWings(mask,realCen,segPts);
 end
 disp('########## Four wing parts are cropped. ##########');
+%The following scripts are kept for visulization when debugging
 %figure,imshow(mask); hold on; plot(segPts(:,1),segPts(:,2),'r+');
 %figure,imshow(mask); hold on; plot(refPts(:,1),refPts(:,2),'r+');
 disp('########## Start to rotate each wing parts. ##########');
@@ -296,8 +273,6 @@ disp('########## Integrated image has been generated. ##########');
 shapevisoutname=fullfile(Result_directory,'Shape_analysis',subFolderList{4},[template,'_',vdlist{side},flag,'_wings_shape.png']);
 figshape=figure('visible', 'off');
 imshow(NewAllComImg);
-%saveas(figmask, maskoutname);
-%print(figshape,shapevisoutname,'-dpng','-r150'); %Use print to save high quality images
 export_fig(figshape,shapevisoutname, '-png','-r150');
 close(figshape);
 disp('An image showing adjusted specimen wings shape has been saved.');
@@ -307,11 +282,7 @@ figshape=figure('visible', 'off');
 imshow(NewAllComImg);
 hold on;
 plot(allinfo(:,1)-NewOrigion(1),allinfo(:,2)-NewOrigion(2),'yx','LineWidth', 2);
-%line(allinfo(1:2,1)-NewOrigion(1),allinfo(1:2,2)-NewOrigion(2), 'Color', 'y' ,'LineWidth', 2);
-%line(allinfo(3:4,1)-NewOrigion(1),allinfo(3:4,2)-NewOrigion(2), 'Color', 'y' ,'LineWidth', 2);
 hold off;
-%saveas(figmask, maskoutname);
-%print(figshape,shapevisoutname,'-dpng','-r150'); %Use print to save high quality images
 export_fig(figshape,shapevisoutname, '-png','-r150');
 close(figshape);
 disp('An image showing adjusted specimen wings shape and boundary Pts has been saved.');

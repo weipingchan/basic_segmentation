@@ -1,8 +1,7 @@
 function pathList=find_wing_seg_path_line(mask, beginPt, extendPx, searchDirection)
-
-% searchDirection='L'; %R B
-% extendPx=10;
-% beginPt=segPts(1,:);
+%Find a better segmentation line from the edge of fore-hindwing gap to
+%the boardder of the image without accidentally cut through other body
+%parts based on random walk algorithm
 
 pathList=beginPt;
 while 1

@@ -1,4 +1,5 @@
 function [conjPt, conjCorners]=findBodyWingCorner01(nStrongCornersList,nSectionList,partMask,realCen,symAxis,tarCorner,LeftRightForeHind,boundingBox,beltWpar,maskf)
+%A funtion to detect the gap between body and wing
 disp('##############################'); 
 disp('Run [find_body_wing_corner3] module');
     nsecn=1;
@@ -17,8 +18,6 @@ disp('Run [find_body_wing_corner3] module');
                 end
             catch
                 disp('DOESNOT work.');
-                %conjCorners(nsecn,:)=[0 0];
-                %break
             end
         end
         if nnz(conjCorners(:,1))>=13
@@ -49,7 +48,7 @@ disp('Run [find_body_wing_corner3] module');
     countAu = accumarray(ic,1);
     
     if isempty(Au)
-        %%Provide a temperary point
+        %Provide a temperary point
         %Calculate necessary vectors
         partMask2=bwareafilt(logical(imdilate(imerode(partMask,strel('disk',5)),strel('disk',5))),[100,Inf]); %remove antanee
         verVector=symAxis*size(partMask2,1);
@@ -79,12 +78,13 @@ disp('Run [find_body_wing_corner3] module');
     
         conjPt=seg2f(travelDist==min(travelDist),:);
         disp('Assign a key point.');
+%The script below is preserved for visualization when debugging
 %         figure,imshow(partMask);hold on;
 %         plot(conjPt(:,1),conjPt(:,2),'rO');
 %         plot(newCen(:,1),newCen(:,2),'bO');
 %         plot(realCen(:,1),realCen(:,2),'b*');
 %         plot(tmpSegPtsf(:,1),tmpSegPtsf(:,2),'r');
-% %         plot(sppEdgePt(:,2),sppEdgePt(:,1),'y*')
+%         plot(sppEdgePt(:,2),sppEdgePt(:,1),'y*')
     else    
         %Find the top 2 value without 
         countAu0=sort(countAu,'descend');

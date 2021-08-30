@@ -1,6 +1,6 @@
 function [bodyMask,bodyCharacters, antennaMask,antennaCharacters]=body_antenna_module2(mask,wingParts,refPts,tipPts,bodyTrimPx, antTrimPx, scalelen)
 %%
-% bodyTrimPx=5;
+
 %Calculate morphological parameters
 disp('Begin to calculate morphology of body and antenna');
 %Body
@@ -20,19 +20,19 @@ bodyraw=mask-wingMask-antenna;
 body=bwareafilt(logical(imdilate(imerode(bodyraw,strel('disk',bodyTrimPx)),strel('disk',bodyTrimPx))),1);
 propBody = regionprops(body,'MinorAxisLength','MajorAxisLength');
 
-%bodyInspect=body+(mask)*0.1;
 if ~isempty(propBody)
     bodyLength=propBody.MajorAxisLength/scalelen;
     bodyWidth=propBody.MinorAxisLength/scalelen;
     bodyCharacters=[bodyLength,bodyWidth];
 else
-    bodyLength=-9999;
-    bodyWidth=-9999;
+    bodyLength=-9999; %This value is provided as a flag
+    bodyWidth=-9999; %This value is provided as a flag
     bodyCharacters=[bodyLength,bodyWidth];
 end
 bodyMask=body;
 
-%Antenna %The unit for all antenna parameters is mm
+%Antenna
+%The unit for all antenna parameters is milimeter
 minimalAntennaLength=60; %The length of antenna should longer than this length or will be neglected
  [antennaCharacters,antFig]=antennaMeasure8(mask,refPts,tipPts,wingMask,body,minimalAntennaLength, bodyraw, upperSegMask, scalelen);
  antennaMask=antFig>0.8;

@@ -1,4 +1,6 @@
 function [allComImg, allinfo]=integrate4WingsInto1Panel(shapeImg,tformWingImg,refPts)
+%A function trying to integrate all four piece of wings into one panel for
+%preliminary visualization
 %Fore wing mix
 disp('Start to combine fore wings.');
 Lpar=shapeImg{1,2};
@@ -57,7 +59,7 @@ disp('The composition of hind wings is finished.');
 allComImg = imfuse(FcomImg,HcomImg);
 disp('The composition of all wings is finished.');
 
-%derive new Info
+%derive new Info (new corrdinates for all key points)
 allinfo=[Lpar(1,:) ; Lpar(4,:) ; Rpar(1,:)+horMvDis; Rpar(4,:)+horMvDis];
 disp('The composition of all parameters is generated.');
 end

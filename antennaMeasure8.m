@@ -6,17 +6,13 @@ function [bolbMorph,antFig]=antennaMeasure8(mask,refPts,tipPts,wingMask,body, mi
     forehindCornerL=tipPts(1,:);
     forehindCornerR=tipPts(2,:);
 
-    % upperSegMaskPts=[[0,0];[size(mask,2),0];[size(mask,2),forehindCornerR(2)];forehindCornerR;realCen;forehindCornerL;[0,forehindCornerL(2)]];
-    % upperSegMask = poly2mask(round(upperSegMaskPts(:,1)),round(upperSegMaskPts(:,2)),size(mask,1),size(mask,2));
-    % antennaraw=mask-body-wingMask;
-    % antenna=bwareafilt(logical(immultiply(antennaraw,upperSegMask)),1);
-
     antenna0=bwareafilt((mask-wingMask)>0,1);
     BWant0 = bwskel(logical(antenna0),'MinBranchLength',30);
     branchimage0 = bwmorph(BWant0, 'branchpoints');
     ss = regionprops(branchimage0,'centroid');
     forkPts0=cat(1,ss.Centroid);
 
+    %The script here is preserved for visualization when debugging
     % figure,imshowpair(antenna0,BWant0);hold on;
     % plot(headTipPt(1),headTipPt(2),'rx');
     % plot(forkPt00(1),forkPt00(2),'ro');
@@ -34,10 +30,6 @@ function [bolbMorph,antFig]=antennaMeasure8(mask,refPts,tipPts,wingMask,body, mi
         midlineDist=abs(lfLoc-mean(lfLoc(forkPts00(:,2)>=median(forkPts00(:,2)))));
         forkPts01=forkPts00(midlineDist<=mean(midlineDist),:);
         forkPt00=findCloestPt(forkPts01,headTipPt);
-    %     forkPt00=findCloestPt(forkPts0,headTipPt);
-    %     [~, Locs] = ismember(forkPt00, forkPts0, 'rows');
-    %     forkPt=findCloestPt(forkPts0,[mean(forkPts0(:,1)),min(forkPts0(:,2))]);   %verison 2
-    %     forkPt=forkPts0(forkPts0(:,2)==min(forkPts0(:,2)),:);   %verison 1
     else
         forkPt00=flip(realCen);
     end
@@ -95,10 +87,10 @@ if ~isempty(antennaTipDist) && numberOfAntenna0~=0
     numberOfAntenna=size(antennaTipDist,1);
         
     if max(antennaTipDist(:,3))>minimalAntennaLength %Define antenna as those longer than minimalAntennaLength pixels
-        if numberOfAntenna==2 && numberOfAntenna0>=2 %two antenae
+        if numberOfAntenna==2 && numberOfAntenna0>=2 %two antennae
             disp('TWO antenna are found');
             [bolbMorph,antFig]=twoAntennaMeasure5(mask, body, antenna1,distanceAnt0,forkPt00, bodyraw, upperSegMask, scalelen);
-        else %Only one antenae
+        else %Only one antenna
             disp('ONE anteanne is found');
             antennaraw=mask-body-wingMask;
             try
@@ -118,6 +110,7 @@ if ~isempty(antennaTipDist) && numberOfAntenna0~=0
     else %No antenna
         bolbMorph=-9999 + zeros(2, 4);
         antFig=double(mask*0.1+antenna1*0.5);
+    %The script here is preserved for visualization when debugging
     %     %Plot antenna
     %     antFig=figure('visible', 'off');
     %     imshow(labeloverlay(double(mask*0.1+antenna1*0.5),It,'Colormap','autumn','Transparency',0));
@@ -133,11 +126,7 @@ else
     catch
         bolbMorph=-9999 + zeros(2, 4);
         antFig=double(mask*0.1);
-    %     %Plot antenna
-    %     antFig=figure('visible', 'off');
-    %     imshow(mask*0.1);
-    %     hold off;
-    disp('No antenna');
+        disp('No antenna');
     end
 end
 

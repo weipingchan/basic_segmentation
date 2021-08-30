@@ -1,5 +1,6 @@
 function [bolbMorph,antFig]=twoAntennaMeasure5(mask, body, antenna1,distanceAnt0,forkPt00, bodyraw, upperSegMask, scalelen)
-            %Head mask until two antena spread
+%A function to identify two anteaane and measure the morphology
+%Try different size of head mask until two antenae disconnected to each other
             radii=10;
             while 1
                 Cmask = createCirclesMask(mask, forkPt00, radii);
@@ -28,8 +29,6 @@ function [bolbMorph,antFig]=twoAntennaMeasure5(mask, body, antenna1,distanceAnt0
                 end
                 
                 [labeledAntenna, numberOfBlobs] = bwlabel(cAntenna);
-            %     cc = bwconncomp(cAntenna);
-            %     numberO  = cc.NumObjects;
                 if radii>= min(size(mask))/2
                     flag=1;
                     break
@@ -57,7 +56,6 @@ function [bolbMorph,antFig]=twoAntennaMeasure5(mask, body, antenna1,distanceAnt0
                 end         
                 %%
                  try %prevent protential error and interoption
-
                     %%
                     if size(distanceAnt,1)>2
                         %Cluster points having long distance to the fork
@@ -66,7 +64,6 @@ function [bolbMorph,antFig]=twoAntennaMeasure5(mask, body, antenna1,distanceAnt0
                         antennaTipDist0= sortrows(distanceAnt(Dist>mean(Dist0)+std(Dist0)*1/2,:),2); %first one is the left one
                         antennaTipDistA0=sortrows(antennaTipDist0(antennaTipDist0(:,1)<mean(antennaTipDist0(:,1)),:),3);
                         antennaTipDistB0=sortrows(antennaTipDist0(antennaTipDist0(:,1)>=mean(antennaTipDist0(:,1)),:),3);
-
                         if ~isempty(antennaTipDistA0)
                             antennaTipDistA=antennaTipDistA0(end,:);
                         else
@@ -87,13 +84,12 @@ function [bolbMorph,antFig]=twoAntennaMeasure5(mask, body, antenna1,distanceAnt0
                 
                 %%
                 antFig2=cell(0,2);
-                antBasePts=zeros(2, 2); %for visualization
+                antBasePts=zeros(2, 2); %the variable is prepared for visualization
                 bolbMorph=-9999 + zeros(2, 4);
-                textPos=zeros(2, 2); %for visualization
-                tipHighlight=cell(0,2); %for visualization
+                textPos=zeros(2, 2); %the variable is prepared for visualization
+                tipHighlight=cell(0,2); %the variable is prepared for visualization
                 for k = 1 : numberOfBlobs
                     oneAntenae = bwareafilt(bwareaopen(logical(immultiply(ismember(labeledAntenna, k),imcomplement(body))),100),1);
-
                     if nnz(oneAntenae)~=0
                     %%
                         bondAnt = bwboundaries(oneAntenae);
@@ -115,9 +111,7 @@ function [bolbMorph,antFig]=twoAntennaMeasure5(mask, body, antenna1,distanceAnt0
                                 rfAnt=2;
                             end
                         end
-                          
                         box=regionprops(oneAntenae,'BoundingBox'); %for visualization
-        %                 tipAnt= antennaTipDist(rfAnt,1:2);
                         try
                             antenaeEdgeMask=imdilate(oneAntenae,strel('disk',1))-imerode(oneAntenae,strel('disk',1));
                             [ei,ej] = find(immultiply(It,antenaeEdgeMask));
@@ -137,21 +131,21 @@ function [bolbMorph,antFig]=twoAntennaMeasure5(mask, body, antenna1,distanceAnt0
                             tipAnt=[];
                         end
                         
-                        if ~isempty(antL) && ~isempty(tipAnt)%Added March 14, 2020
+                        if ~isempty(antL) && ~isempty(tipAnt)
                             basetipdist=pdist([tipAnt;antennaeBase],'euclidean');
                             curveDegree=antL/basetipdist;
-                        elseif isempty(antL) && ~isempty(tipAnt) %Added March 14, 2020
-                            if bolbMorph1(1,1)<0 %Added March 14, 2020
-                                antL=-9999; %Added March 14, 2020
-                                curveDegree=-9999; %Added March 14, 2020
-                            else %Added March 14, 2020
-                                antL=bolbMorph1(1,1); %Added March 14, 2020
-                                curveDegree=bolbMorph1(1,4); %Added March 14, 2020
-                            end  %Added March 14, 2020
-                        else  %Added March 14, 2020
-                            antL=-9999; %Added March 14, 2020
-                            curveDegree=-9999; %Added March 14, 2020
-                        end %Added March 14, 2020
+                        elseif isempty(antL) && ~isempty(tipAnt) 
+                            if bolbMorph1(1,1)<0
+                                antL=-9999;
+                                curveDegree=-9999;
+                            else
+                                antL=bolbMorph1(1,1);
+                                curveDegree=bolbMorph1(1,4);
+                            end
+                        else
+                            antL=-9999;
+                            curveDegree=-9999;
+                        end
                         if antL>0 antLout=antL/scalelen*10;, else antLout=-9999;,  end;
                         if bolbMorph1(2)>0 antWout=bolbMorph1(2:3)/scalelen*10;, else antWout=bolbMorph1(2:3);,  end;
                         bolbMorph(rfAnt,:)=[antLout, antWout, curveDegree];
@@ -172,6 +166,7 @@ function [bolbMorph,antFig]=twoAntennaMeasure5(mask, body, antenna1,distanceAnt0
                 antFig=double(mask*0.1);
             end
             %%
+            %The scripts below is prepared for visualization when debugging
 %                 %Plot antenna
 %                 antFigv=figure;
 %                 imshow(labeloverlay(double(mask*0.1+(antFig2{1}+antFig2{2})*0.5),It,'Colormap','autumn','Transparency',0));hold on;

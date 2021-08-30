@@ -1,7 +1,5 @@
 function  tangentLineSlpoe=find_inner_tangent_line_slope2(partMask,symAxis,tarCorner,LeftRight, nSection,boundingBox)
-
-%partMask2=bwareafilt(logical(imdilate(imfill(imerode(partMask,strel('disk',10)),'hole'),strel('disk',10))),1); %Used for reduced area
-
+%This funciton is only used in generating preliminary visualization
 verVector=symAxis*max(size(partMask));
 symOrtho=reshape(null(symAxis(:).'),1,[]);
 horVector=symOrtho*max(size(partMask));
@@ -21,7 +19,6 @@ end
 
 horEdgeLine=[[1,size(partMask,1)] ; flip(size(partMask))];
 
-% signC=-sign(horVector(1)*horVector(2));
 verLine=[tarCorner-verVector; tarCorner+verVector];
 horLine=[tarCorner-horVector; tarCorner+horVector];
 
@@ -39,12 +36,7 @@ wingMask=imdilate(imerode(immultiply(partMask,region),strel('disk',30)),strel('d
 upperEdgePt=upspecimenB{1};
 Corners=flip(upperEdgePt,2);
 
-%emptyRegionLength=20;
-
 beltB=[boundingBoxCorner-horVector ; boundingBoxCorner+horVector];
-%beltR=[tarCorner-verVector ; tarCorner+verVector];
-%[beltIntX,beltIntY]= polyxpoly(beltR(:,1),beltR(:,2),beltB(:,1),beltB(:,2));
-%triangleRegion=[tarCorner; boundingBoxCorner; [beltIntX,beltIntY]];
 
 usDL=tarCorner-boundingBoxCorner;
 uSlopeL=usDL(2)/usDL(1);
@@ -77,7 +69,6 @@ edgePtsCountDiff3([IdxLinear,IdxStd]+1)=2; %points shows the disconectivity to i
 edgePtsCountMean=edgePtsCount;
 edgePtsCountMean(edgePtsCountMean<mean(edgePtsCountMean))=0;
 
-%[edgePtsCount;edgePtsCountDiff2;edgePtsCountDiff3;sign(edgePtsCountMean)]
 intersectLoc=find(edgePtsCountDiff2.*edgePtsCountDiff3.*sign(edgePtsCountMean)<=-2, 1 );
 if isempty(intersectLoc)
     intersectLoc=find(edgePtsCountDiff3.*sign(edgePtsCountMean)>=2, 1 );
@@ -86,11 +77,9 @@ if isempty(intersectLoc)
     end
 end
 
-%block0=[tarCorner-[1, Ls2cen(intersectLoc)]*max(size(partMask)) ; tarCorner+[1, Ls2cen(intersectLoc)]*max(size(partMask))];
-%block1=[tarCorner-[1, Ls2cen(intersectLoc+1)]*max(size(partMask)) ; tarCorner+[1, Ls2cen(intersectLoc+1)]*max(size(partMask))];
+tangentLineSlpoe=Ls2cen(intersectLoc);
 
- tangentLineSlpoe=Ls2cen(intersectLoc);
- 
+%Preserved for visualization when debugging
 % vector= [1, tangentLineSlpoe]*size(partMask,1);
 % vec=[tarCorner; tarCorner+sign(tangentLineSlpoe)*vector];
 % figure,imshow(wingMask);hold on;

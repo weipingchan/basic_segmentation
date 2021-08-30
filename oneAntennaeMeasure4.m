@@ -63,7 +63,7 @@ function [bolbMorph,antFig]=oneAntennaeMeasure4(mask, forkPt00, oneAntenae,anten
         bolbMorph1=-9999 + zeros(1, 4);
         tipAnt=[];
     end
-    %judge if the antennae is the right side or left side
+    %judge if the antenna is the right side or left side
     ss01 = regionprops(oneAntenae,'centroid');
     antCens=ss01.Centroid;
     if antCens(1)<realCen(1)
@@ -75,7 +75,7 @@ function [bolbMorph,antFig]=oneAntennaeMeasure4(mask, forkPt00, oneAntenae,anten
     if ~isempty(antL) && ~isempty(tipAnt)
         basetipdist=pdist([tipAnt;antennaeBase],'euclidean');
         curveDegree=antL/basetipdist;
-    elseif isempty(antL) && ~isempty(tipAnt) %Added March 14, 2020
+    elseif isempty(antL) && ~isempty(tipAnt)
         if bolbMorph1(1,1)<0
             antL=-9999;
             curveDegree=-9999;
@@ -83,9 +83,9 @@ function [bolbMorph,antFig]=oneAntennaeMeasure4(mask, forkPt00, oneAntenae,anten
             antL=bolbMorph1(1,1);
             curveDegree=bolbMorph1(1,4);
         end
-    else  %Added March 14, 2020
-        antL=-9999; %Added March 14, 2020
-        curveDegree=-9999; %Added March 14, 2020
+    else
+        antL=-9999; %flagged by this value
+        curveDegree=-9999; %flagged by this value
     end
     if antL>0 antLout=antL/scalelen*10;, else antLout=-9999;,  end;
     if bolbMorph1(2)>0 antWout=bolbMorph1(2:3)/scalelen*10;, else antWout=bolbMorph1(2:3);,  end;
@@ -93,6 +93,7 @@ function [bolbMorph,antFig]=oneAntennaeMeasure4(mask, forkPt00, oneAntenae,anten
     antFig=oneAntenae;
             
             %%
+%scripts below are preserved for visualization when debugging
 %         %Plot antenna
 %         box=regionprops(oneAntenae,'BoundingBox'); %for visualization
 %         antBasePts=antennaeBase; %for visualization
