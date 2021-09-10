@@ -1,5 +1,5 @@
 function  tangentLineSlpoe=find_inner_tangent_line_slope2(partMask,symAxis,tarCorner,LeftRight, nSection,boundingBox)
-%This funciton is only used for generating preliminary visualization
+%This function is only used for generating preliminary visualization
 verVector=symAxis*max(size(partMask));
 symOrtho=reshape(null(symAxis(:).'),1,[]);
 horVector=symOrtho*max(size(partMask));
@@ -65,7 +65,7 @@ edgePtsCountDiff2=sign([edgePtsCountDiff,0]);
 IdxLinear=findchangepts(edgePtsCount,'MaxNumChanges',3,'Statistic','linear');
 IdxStd=findchangepts(edgePtsCount,'MaxNumChanges',3,'Statistic','std'); 
 edgePtsCountDiff3=ones( [1,length(edgePtsCount)] );
-edgePtsCountDiff3([IdxLinear,IdxStd]+1)=2; %point shows the disconnectivity to its neighbor
+edgePtsCountDiff3([IdxLinear,IdxStd]+1)=2; %points shows the disconnectivity to its neighbor
 edgePtsCountMean=edgePtsCount;
 edgePtsCountMean(edgePtsCountMean<mean(edgePtsCountMean))=0;
 

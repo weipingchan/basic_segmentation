@@ -1,5 +1,5 @@
 function [conjPt, conjCorners]=findBodyWingCorner01(nStrongCornersList,nSectionList,partMask,realCen,symAxis,tarCorner,LeftRightForeHind,boundingBox,beltWpar,maskf)
-%A funtion to detect the gap between body and wing
+%A function to detect the gap between body and wing
 disp('##############################'); 
 disp('Run [find_body_wing_corner3] module');
     nsecn=1;
@@ -17,20 +17,20 @@ disp('Run [find_body_wing_corner3] module');
                     nsecn=nsecn+1;
                 end
             catch
-                disp('DOESNOT work.');
+                disp('DOES NOT work.');
             end
         end
         if nnz(conjCorners(:,1))>=13
-            disp([num2str(nStrongCorners),' interesting points WORKS.']);
+            disp([num2str(nStrongCorners),' interesting points WORK.']);
             disp(['Parameter [nStrongCorners]: ',num2str(nStrongCorners)]);
             break
         else
-            disp([num2str(nStrongCorners),' interesting points does not work.']);
+            disp([num2str(nStrongCorners),' interesting points do not work.']);
         end
     end
     
     %%
-    %if there are two set of points having the same frequency, use the
+    %if there are two sets of points with the same frequency, use the
     %one near the tarCorner
     if LeftRightForeHind=='LF'
         comCorner=[1, 1];
@@ -42,18 +42,18 @@ disp('Run [find_body_wing_corner3] module');
         comCorner=size(partMask);
     end
     %%
-    %Search among top 2 highly-frequent candidate points to determine the
+    %Search between top 2 highly-frequent candidate points to determine the
     %final one
     [Au,~,ic] = unique(conjCorners(conjCorners(:,1)>0,:),'rows');
     countAu = accumarray(ic,1);
     
     if isempty(Au)
-        %Provide a temperary point
+        %Provide a temporary point
         %Calculate necessary vectors
-        partMask2=bwareafilt(logical(imdilate(imerode(partMask,strel('disk',5)),strel('disk',5))),[100,Inf]); %remove antanee
+        partMask2=bwareafilt(logical(imdilate(imerode(partMask,strel('disk',5)),strel('disk',5))),[100,Inf]); %remove antennae
         verVector=symAxis*size(partMask2,1);
           
-        %Find all edge points based on de antanee mask
+        %Find all edge points based on the antennae mask
         [specimenB,~]=bwboundaries(partMask2);
 
         sppEdgePt=[];
@@ -86,15 +86,15 @@ disp('Run [find_body_wing_corner3] module');
 %         plot(tmpSegPtsf(:,1),tmpSegPtsf(:,2),'r');
 %         plot(sppEdgePt(:,2),sppEdgePt(:,1),'y*')
     else    
-        %Find the top 2 value without 
+        %Find the top 2 values without 
         countAu0=sort(countAu,'descend');
         if length(countAu0)>=2
-            commonest=Au(countAu>1&(countAu==countAu0(1)|countAu==countAu0(2)),:); %Chose top 2 highly-frequent pts (frequency >1)
+            commonest=Au(countAu>1&(countAu==countAu0(1)|countAu==countAu0(2)),:); %Choose top 2 highly-frequent pts (frequency >1)
         else
             try
                 commonest=Au(countAu>1&countAu==countAu0(1),:); %if there is only one highly-frequent pt (frequency >1)
             catch
-                commonest=[]; %This line is added to prevent interuption of running
+                commonest=[]; %This line is added to prevent interruption of running
             end
         end
 
@@ -110,6 +110,6 @@ disp('Run [find_body_wing_corner3] module');
         else
             conjPt=commonest;
         end
-        disp('Find the key point.');
+        disp('Found the key point.');
     end
 end

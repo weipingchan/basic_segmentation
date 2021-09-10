@@ -174,7 +174,7 @@ end
 %     plot(beltR(:,1),beltR(:,2),'r')
 %     plot(Corners(:,1),Corners(:,2),'g*')
 
-%Pick the group that is closest to the realCen
+%Pick the group that closest to the realCen
 canPtlist=[];
 for gid=1:length(blockPts)
     avgPt=mean(blockPts{gid});

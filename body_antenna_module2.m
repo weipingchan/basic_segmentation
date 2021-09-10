@@ -5,7 +5,7 @@ function [bodyMask,bodyCharacters, antennaMask,antennaCharacters]=body_antenna_m
 disp('Begin to calculate morphology of body and antenna');
 %Body
 wingMask=wingParts{1}+wingParts{2}+wingParts{3}+wingParts{4};
-realCen=refPts(8,:); %rough antenna preparation
+realCen=refPts(8,:); %rough antennae preparation
 forehindCornerL=tipPts(1,:);
 forehindCornerR=tipPts(2,:);
 body0=bwareafilt(logical(mask-wingMask), 1);
@@ -32,9 +32,9 @@ end
 bodyMask=body;
 
 %Antenna
-%The unit for all antenna parameters is milimeter
-minimalAntennaLength=60; %The length of antenna should longer than this length or will be neglected
+%The unit for all antenna parameters is millimeter
+minimalAntennaLength=60; %The length of an antenna should be longer than this length or will be neglected
  [antennaCharacters,antFig]=antennaMeasure8(mask,refPts,tipPts,wingMask,body,minimalAntennaLength, bodyraw, upperSegMask, scalelen);
  antennaMask=antFig>0.8;
- disp('Body and antenna are segmented');
+ disp('Body and antennae are segmented');
 end

@@ -1,5 +1,5 @@
 function [hind_fore_sep,resize_ratio]=get_original_line(mask,json,inline)
-%Recover the manually segmentted line for fore and hindwings according to
+%Recover the manually segmented line for fore and hindwings according to
 %the rescaled ratio provided in the json file
     resize_ratio=((size(mask,1)+50)/json.size(1))*(json.size(1)/json.resize(1)); %to overcome the different img size between jpg and matrix; +50 here is for the size of scale bar
     

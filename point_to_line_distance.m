@@ -9,7 +9,7 @@ function distance=point_to_line_distance(pt, v1, v2)
 % 2D inputs are extended to 3D by setting all z-values to 0, all inputs
 % should be either nx2/1x2 or nx3/1x3.
 %
-% The actual calculation is a slightly edit version of this line:
+% The actual calculation is a slightly edited version of this line:
 % distance=norm(cross(v1-v2,pt-v2))/norm(v1-v2)
 % (this line only works for a single 3D point)
 %

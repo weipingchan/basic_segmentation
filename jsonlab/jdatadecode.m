@@ -40,7 +40,7 @@ function newdata=jdatadecode(data,varargin)
 %                         please set FormatVersion to 1
 %
 % output:
-%      newdata: the covnerted data if the input data does contain a JData 
+%      newdata: the converted data if the input data does contain a JData 
 %               structure; otherwise, the same as the input.
 %
 % examples:
@@ -282,7 +282,7 @@ function newdata=jdatadecode(data,varargin)
         end
     end
 
-    %% handle bytestream and arbitrary matlab objects
+    %% handle bytestream and arbitrary Matlab objects
     if(isfield(data,N_('_ByteStream_')) && isfield(data,N_('_DataInfo_'))==2)
         newdata=cell(len,1);
         for j=1:len

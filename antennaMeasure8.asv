@@ -1,6 +1,6 @@
 function [bolbMorph,antFig]=antennaMeasure8(mask,refPts,tipPts,wingMask,body, minimalAntennaLength, bodyraw, upperSegMask, scalelen)
     %The unit for all antenna parameters is mm
-    % minimalAntennaLength=80; %The length of an antenna should be longer than this length or will be neglected
+    % minimalAntennaLength=80; %The length of antenna should be longer than this length or will be neglected
 
     realCen=refPts(8,:);
     forehindCornerL=tipPts(1,:);
@@ -40,12 +40,12 @@ function [bolbMorph,antFig]=antennaMeasure8(mask,refPts,tipPts,wingMask,body, mi
 
     antenna1=bwareafilt(logical(immultiply(antenna0,antennaMask)),1);
 
-    %extract antennae image
+    %extract antenna image
     antenna02=bwareafilt(bwareaopen(immultiply(antenna1-body,antennaMask),200),[5, Inf],4); %Remove 1 or 2 pixels attachment
     cc0 = bwconncomp(antenna02,4);
     numberOfAntenna0  = cc0.NumObjects;
    
-    try %prevent potential error and interruption
+    try %prevent protential error and interoption
         It0 = bwmorph(antenna1,'thin','inf');
         [Bbx,Bby] =  find(bwmorph(It0,'branchpoints'));
         %select branch point and convert to index
@@ -60,7 +60,7 @@ function [bolbMorph,antFig]=antennaMeasure8(mask,refPts,tipPts,wingMask,body, mi
             distanceAnt0=[distanceAnt0; [i(n),j(n),Dd0(i(n),j(n))]];
         end
         %%
-        %Cluster points with a long distance to the fork
+        %Cluster points having long distance to the fork
         Dist = sqrt(sum(bsxfun(@minus, distanceAnt0(:,1:2), flip(forkPt00)).^2,2));
         antennaTipDist0= sortrows(distanceAnt0(Dist>mean(Dist)+std(Dist)*1/2,:),2); %first one is the left one
         antennaTipDistA0=sortrows(antennaTipDist0(antennaTipDist0(:,1)<mean(antennaTipDist0(:,1)),:),3);
@@ -91,7 +91,7 @@ if ~isempty(antennaTipDist) && numberOfAntenna0~=0
             disp('TWO antennae are found');
             [bolbMorph,antFig]=twoAntennaMeasure5(mask, body, antenna1,distanceAnt0,forkPt00, bodyraw, upperSegMask, scalelen);
         else %Only one antenna
-            disp('ONE antenna is found');
+            disp('ONE anteanne is found');
             antennaraw=mask-body-wingMask;
             try
                 oneAntenae=bwareafilt(logical(immultiply(antennaraw,antenna1)),1);
@@ -101,7 +101,7 @@ if ~isempty(antennaTipDist) && numberOfAntenna0~=0
             try
                 [bolbMorph,antFig]=oneAntennaeMeasure4(mask, forkPt00, oneAntenae,antenna1,It0, Dd0,realCen,scalelen);
            catch
-                disp('Oops! There are actually NO antennae found.');
+                disp('Ops! There is actually NO antennae found.');
                 bolbMorph=-9999 + zeros(2, 4);
                 antFig=double(mask*0.1);
             end

@@ -1,5 +1,5 @@
 function [com, mainAxis,secAxis]=findSymetricAxes(inImg)
-%A function to detect the vertical and horizaontal symmetric axes of a
+%A function to detect the vertical and horizontal symmetric axes of a
 %given image
 if size(inImg,3)>1, inImg=rgb2gray(inImg); end
 imd=transpose(inImg);

@@ -3,8 +3,8 @@ function [conjPt, conjCorners]=findBodyWingCorner2(nStrongCornersList,nSectionLi
     [conjPt01, conjCorners01]=findBodyWingCorner01(nStrongCornersList,nSectionList,partMask,realCen,symAxis,tarCorner,LeftRightForeHind,boundingBox,beltWpar,maskf);
 
     [conjPt02, conjCorners02]=findBodyWingCorner02(nStrongCornersList,nSectionList,partMask,realCen,symAxis,tarCorner,LeftRightForeHind,boundingBox,beltWpar,maskf);
-    %The function embeded here uses additional logic to pick the point
-    %closer to the horizontal line at cnetroid; this logic is also applied
+    %The function embedded here uses additional logic to pick the point
+    %closest to the horizontal line at centroid; this logic is also applied
     %below
     
     conjPtAll=[conjPt01; conjPt02];

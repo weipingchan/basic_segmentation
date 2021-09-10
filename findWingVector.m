@@ -38,11 +38,11 @@ for prebeltn=1:length(prebeltWparList)
     [~,minLoc]=min([d1,d2,d3]);
     vecTri=diff(sideTriy)./diff(sideTrix);
     
-    vecTriList=[vecTriList; [triPtList(minLoc:minLoc+1,:), [vecTri(minLoc:minLoc,:); vecTri(minLoc:minLoc,:)]]]; %Here, prebeltn act as an non-constant value
+    vecTriList=[vecTriList; [triPtList(minLoc:minLoc+1,:), [vecTri(minLoc:minLoc,:); vecTri(minLoc:minLoc,:)]]]; %Here, prebeltn acts as a non-constant value
 end
 verSlope=verVector(1)/verVector(2);
 tmpList=round(vecTriList(:,3),3);
-wingSlope0=mode(tmpList(tmpList~=round(verSlope,3))); %FInd the commonest value except verSlope of verVector
+wingSlope0=mode(tmpList(tmpList~=round(verSlope,3))); %Find the most common value except verSlope of verVector
 pointLoc1=find(round(vecTriList(:,3),3)==wingSlope0, 1, 'first');
 pointList=vecTriList(pointLoc1:pointLoc1+1,1:2);
 tanRefPt=flip(pointList(1,:));

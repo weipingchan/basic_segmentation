@@ -99,7 +99,7 @@ function json=savejson(rootname,obj,varargin)
 %                         the input data before saving
 %
 %        opt can be replaced by a list of ('param',value) pairs. The param 
-%        string is equivallent to a field in opt and is case sensitive.
+%        string is equivalent to a field in opt and is case-sensitive.
 % output:
 %      json: a string in the JSON format (see http://json.org)
 %
@@ -647,7 +647,7 @@ try
     else
             propertynames = properties(item);
             for p = 1:numel(propertynames)
-                for o = numel(item):-1:1 % aray of objects
+                for o = numel(item):-1:1 % array of objects
                     st(o).(propertynames{p}) = item(o).(propertynames{p});
                 end
             end

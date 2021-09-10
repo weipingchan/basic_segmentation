@@ -1,5 +1,5 @@
 function forehindCorner=find_fore_hind_corner(mask,nStrongCorners,realCen,symAxis,tarCorner,nSection,boundingBox,beltWpar,beltHpar,slopeSwitch)
-%Detect all salinent points
+%Detect all salient points
 corners = detectHarrisFeatures(mask);
 if nStrongCorners<size(corners.Location,1)
     Corners=corners.selectStrongest(nStrongCorners).Location;
@@ -25,9 +25,9 @@ maskf2=bwareafilt(logical(imdilate(imfill(imerode(mask,strel('disk',10)),'hole')
 if strcmp(slopeSwitch,'cenAxis')
     wingVector=verVector*max(size(maskf2));
     tanRefPt=tarCorner;
-    disp('Using central vertical Axis as the vector');
+    disp('Using central vertical axis as the vector');
 else
-    [wingVector, tanRefPt] = findWingVector(maskf2,realCen,boundingBox,verVector,part); %The function to find wind edge vector
+    [wingVector, tanRefPt] = findWingVector(maskf2,realCen,boundingBox,verVector,part); %The function to find wing edge vector
     disp('Using automatically detected slope of the wing edge as the vector');
 end
 
@@ -50,10 +50,10 @@ sppEdgePt=specimenB{1};
 %Adjusting the target corner to prevent serious edge effect (i.e. many corners will be detected)
 startAdj=sign(jud)*beltwidth/2;
 %%
-%Derive vectors of all evenly spaced line
+%Derive vectors of all evenly spaced lines
 [segPt2UL,~,~] = interparc(nSection,[realCen(1)+startAdj,tanRefPt(1)],[realCen(2),tanRefPt(2)]);
 %%
-%Derive all intersect points of all evenly spaced line
+%Derive all intersect points of all evenly spaced lines
 intersectAll=cell(length(segPt2UL),0);
 for ptn=1:length(segPt2UL)
     tmpSegPts=[segPt2UL(ptn,:)-wingVector ; segPt2UL(ptn,:)+wingVector];
@@ -61,9 +61,9 @@ for ptn=1:length(segPt2UL)
     intersectAll{ptn} = [intersectX,intersectY];
 end
 %%
-%Calculate 2 indices for determine the targeted point
+%Calculate 2 indices to determine the targeted point
 %1. Number of segments
-%2. If there is candidate points in the belt region
+%2. If there are candidate points in the belt region
 intersectSegCount=zeros(length(intersectAll),0);
 intersectDistPtsCount=zeros(length(intersectAll),0);
 intersectDistPts=[-1 -1 -1];
@@ -77,22 +77,22 @@ for ccc=1:length(intersectAll)
     intersectDistPts=cat(1,intersectDistPts,cat(2,cIdx,inPts));            
 end
 
-%If there is candidate points in the belt region
+%If there are candidate points in the belt region
 intersectDistPtsCount2=intersectDistPtsCount; %preserve the original result
 intersectDistPtsCount2(intersectDistPtsCount2>0)=1; %having value in belt -> 1
 intersectDistPtsCount2(1)=0; %first value -> 1 prevent error
 
-% Detect the changing point of Number of segments
+% Detect the changing point of number of segments
 intersectSegCountDiff=diff(intersectSegCount);
 intersectSegCountDiff2=sign([0,intersectSegCountDiff]);
-IdxLinear=findchangepts(intersectSegCount,'MaxNumChanges',6,'Statistic','linear'); %THE NUMBER OF CHANGING PT here is sensitve to damaged wings. 6 is enough in most cases.
+IdxLinear=findchangepts(intersectSegCount,'MaxNumChanges',6,'Statistic','linear'); %THE NUMBER OF CHANGING PT here is sensitive to damaged wings. 6 is enough in most cases.
 IdxStd=findchangepts(intersectSegCount,'MaxNumChanges',6,'Statistic','std'); 
 intersectSegCountDiff3=ones( [1,length(intersectSegCount)] );
-intersectSegCountDiff3([IdxLinear,IdxStd])=2; %points shows the disconectivity to its neighbor
+intersectSegCountDiff3([IdxLinear,IdxStd])=2; %point shows the disconnectivity to its neighbor
 intersectSegCountDiff4=intersectSegCountDiff2.*intersectSegCountDiff3;
 intersectSegCountDiff4(intersectSegCountDiff4<0)=0;
 
-%Use all two indicies to determine the target segment line
+%Use two indices to determine the target segment line
 intersectLoc=find(intersectDistPtsCount2.*intersectSegCountDiff4>=2, 1 );
 if isempty(intersectLoc)
     intersectLoc=find(intersectDistPtsCount2.*intersectSegCountDiff4>=1, 1);
@@ -164,7 +164,7 @@ end
 
 
 %%
-%The point most distant form those two detected points should be our target
+%The point most distant from those two detected points should be our target
 if size(forehindCorners,1)>1
     disp(['Find ',num2str(size(forehindCorners,1)),' candidate points; begin refining.']);
     forehindCornerDists=zeros(1,size(forehindCorners,1));
@@ -181,7 +181,7 @@ else
 end
 
 if ~isempty(forehindCorner)
-    disp('Find the key point.');
+    disp('Found the key point.');
 else
     disp('DID NOT find the key point.');
 end

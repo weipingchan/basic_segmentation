@@ -5,7 +5,7 @@ function varargout = ghostscript(cmd)
 %   [status result] = ghostscript(cmd)
 %
 % Attempts to locate a ghostscript executable, finally asking the user to
-% specify the directory ghostcript was installed into. The resulting path
+% specify the directory ghostscript was installed into. The resulting path
 % is stored for future reference.
 % 
 % Once found, the executable is called with the input command string.
@@ -17,7 +17,7 @@ function varargout = ghostscript(cmd)
 %   cmd - Command string to be passed into ghostscript.
 %
 % OUT:
-%   status - 0 iff command ran without problem.
+%   status - 0 if command ran without problem.
 %   result - Output from ghostscript.
 
 % Copyright: Oliver Woodford, 2009-2015, Yair Altman 2015-

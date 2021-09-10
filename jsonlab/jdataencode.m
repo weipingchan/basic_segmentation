@@ -29,7 +29,7 @@ function jdata=jdataencode(data, varargin)
 %                      for octave, the default value is an empty string ''.
 %         UseArrayZipSize: [1|0] if set to 1, _ArrayZipSize_ will be added to 
 %       	       store the "pre-processed" data dimensions, i.e.
-%       	       the original data stored in _ArrayData_, and then flaten
+%       	       the original data stored in _ArrayData_, and then flatten
 %       	       _ArrayData_ into a row vector using row-major
 %       	       order; if set to 0, a 2D _ArrayData_ will be used
 %         MapAsStruct: [0|1] if set to 1, convert containers.Map into
@@ -276,7 +276,7 @@ try
     else
         propertynames = properties(item);
         for p = 1:numel(propertynames)
-            for o = numel(item):-1:1 % aray of objects
+            for o = numel(item):-1:1 % array of objects
                 newitem(o).(propertynames{p}) = item(o).(propertynames{p});
             end
         end
@@ -290,7 +290,7 @@ function newitem=any2jd(item,varargin)
 
 N=@(x) N_(x,varargin{:});
 newitem.(N('_DataInfo_'))=struct('MATLABObjectClass',class(item),'MATLABObjectSize',size(item));
-newitem.(N('_ByteStream_'))=getByteStreamFromArray(item);  % use undocumented matlab function
+newitem.(N('_ByteStream_'))=getByteStreamFromArray(item);  % use undocumented Matlab function
 if(varargin{1}.base64)
     newitem.(N('_ByteStream_'))=char(base64encode(newitem.(N('_ByteStream_'))));
 end

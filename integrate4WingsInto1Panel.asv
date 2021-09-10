@@ -41,13 +41,13 @@ disp('Left hindwing has been re-registered.');
 RverMvDis=Rpar(2,:)-Rpar(3,:);
 if RverMvDis(1)<0 || RverMvDis(2)<0
     RmvRImg0 = imtranslate(RhindImg,RverMvDis);
-    disp('Full output view is NOT applied since variable [RverMvDis] contains a negative value.');
+    disp('Full output view is NOT applied since variable [RverMvDis] containing negative value.');
 else
     RmvRImg0 = imtranslate(RhindImg,RverMvDis,'OutputView','full');
 end
 if horMvDis(1)<0 || horMvDis(2)<0
     RmvRImg = imtranslate(RmvRImg0,horMvDis);
-    disp('Full output view is NOT applied since variable [horMvDis] contains a negative value.');
+    disp('Full output view is NOT applied since variable [horMvDis] containing negative value.');
 else
     RmvRImg = imtranslate(RmvRImg0,horMvDis,'OutputView','full');
 end
@@ -59,7 +59,7 @@ disp('The composition of hindwings is finished.');
 allComImg = imfuse(FcomImg,HcomImg);
 disp('The composition of all wings is finished.');
 
-%derive new info (new coordinates for all key points)
+%derive new Info (new corrdinates for all key points)
 allinfo=[Lpar(1,:) ; Lpar(4,:) ; Rpar(1,:)+horMvDis; Rpar(4,:)+horMvDis];
 disp('The composition of all parameters is generated.');
 end

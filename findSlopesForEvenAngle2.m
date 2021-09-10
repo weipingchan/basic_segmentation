@@ -1,5 +1,5 @@
 function Ls2cen=findSlopesForEvenAngle2(symAxis,uSlopeL,nSection,LeftRightForeHind)
-%Generate a list of slope which has even angle
+%Generate a list of slopes that have even angles
 Ssym=-symAxis(2)/symAxis(1);
 Sslo=-uSlopeL;
 if LeftRightForeHind=='LF'

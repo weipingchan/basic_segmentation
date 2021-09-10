@@ -1,6 +1,6 @@
 function [rpartWing, newRefPts]=rotateWings(pInd,partWing,partVector,refVector,refPts)
-%A funciton to rotate wing piece and the corresponding coordinates of key
-%points; this is a funciton embeded in another function named wingRotation
+%A function to rotate wing pieces and the corresponding coordinates of key
+%points; this is a function embedded in another function named wingRotation
     CosTheta = dot(partVector,refVector)/(norm(partVector)*norm(refVector));
     if pInd==1||pInd==3
         ThetaInDegrees = sign(partVector(1)*partVector(2))*acosd(CosTheta);

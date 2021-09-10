@@ -13,15 +13,15 @@ disp('The skeleton Image has been created.');
 %figure,imshow(mask); hold on;
 %plot(skeletonEndPts(:,1),skeletonEndPts(:,2),'r*');
 
-%To prevent the result from round shape wing may be biased by thelateral
-%edge, the front end of bounding box are lifted alittle bit.
+%To prevent the result where round-shaped wing may be biased by the lateral
+%edge, the front ends of bounding box are lifted a little bit.
 liftedLength=100;
 disp(['Variable [liftedLength]: ',num2str(liftedLength)]);
 %Left end
 tipL=findCloestPt(skeletonEndPts,boundingBox(1:2)-[0 liftedLength]);
 %Right end
 tipR=findCloestPt(skeletonEndPts,[boundingBox(1)+boundingBox(3),boundingBox(2)-liftedLength]);
-disp('Two tips of fore wing front ends are found.');
+disp('Two tips of forewing front ends are found.');
 
 VectorL=tipL-segPts(2,:);
 foreWIngLongAxisSlopeL=VectorL(2)/VectorL(1);
@@ -30,23 +30,23 @@ foreWIngLongAxisSlopeR=VectorR(2)/VectorR(1);
 
 nSection=10;
 partMask=lowerMask;
-disp('Start to find the inner tangent line of Left hind wing.');
+disp('Start to find the inner tangent line of the left hindwing.');
 try
     tangentLineSlpoeL=find_inner_tangent_line_slope2(partMask,symAxis,segPts(end,:),'L', nSection,boundingBox);
     if isempty(tangentLineSlpoeL) tangentLineSlpoeL=symAxis(2)/symAxis(1);, end; 
 catch
     tangentLineSlpoeL=symAxis(2)/symAxis(1);
 end
-disp('The slope of inner tangent line of Left hind wing is determined.');
+disp('The slope of the inner tangent line of the left hindwing is determined.');
 %Right
-disp('Start to find the inner tangent line of Rt hind wing.');
+disp('Start to find the inner tangent line of the right hindwing.');
 try
     tangentLineSlpoeR=find_inner_tangent_line_slope2(partMask,symAxis,segPts(end-1,:),'R', nSection,boundingBox);
     if isempty(tangentLineSlpoeR) tangentLineSlpoeR=symAxis(2)/symAxis(1);, end;
 catch
     tangentLineSlpoeR=symAxis(2)/symAxis(1);
 end
-disp('The slope of inner tangent line of Right hind wing is determined.');
+disp('The slope of the inner tangent line of the right hindwing is determined.');
 
 tipPts=[tipL; tipR];
 WingAxesSlopes=[foreWIngLongAxisSlopeL, tangentLineSlpoeL, foreWIngLongAxisSlopeR, tangentLineSlpoeR];

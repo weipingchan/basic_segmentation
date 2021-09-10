@@ -63,7 +63,7 @@ upperEdgePt0=upspecimenB0{1};
 [B0,~]=bwboundaries(maskf);
 edgePt=B0{1};
 %%
-%Detect all salinent points
+%Detect all salient points
 corners = detectHarrisFeatures(partMask2);
 if size(corners,1)<nStrongCorners*2/3 %Legacy line
     Corners=corners.Location;   
@@ -88,7 +88,7 @@ emptyRegionLength=50;
 usDL=tarCorner-realCen;
 uSlopeL=usDL(2)/usDL(1);
 %%
-%move the reference point into the maks in order to prevent the interference of the zig-zag boundary
+%move the reference point into the mask in order to prevent the interference of the zig-zag boundary
 if LeftRightForeHind=='LF'
     tarCorner0=tarCorner+10*[1 -1];
 elseif LeftRightForeHind=='RF'
@@ -100,7 +100,7 @@ else
 end
 
 %%
-%Derive slopes of all evenly spaced angle
+%Derive slopes of all evenly-spaced angles
 Ls2cen=findSlopesForEvenAngle2(symAxis,uSlopeL,nSection,LeftRightForeHind);
 %%
 %Calculate the intersection points
@@ -112,10 +112,10 @@ for slpn=1:length(Ls2cen)
     intersectAll{slpn} = [intersectX,intersectY];
 end
 %%
-%Calculate 3 indices for determine the targeted point
+%Calculate 3 indices to determine the targeted point
 %1. Number of segments
-%2. If there is candidate points in the belt region
-%3. The abrupt change in the dinstance to the nearest point (wing edge)
+%2. If there are candidate points in the belt region
+%3. The abrupt change in the distance to the nearest point (wing edge)
 intersectSegCount=zeros(length(intersectAll),0);
 intersectDistPtsCount=zeros(length(intersectAll),0);
 intersectShortestDist=zeros(length(intersectAll),0);
@@ -146,26 +146,26 @@ for ccc=1:length(intersectAll)
     end    
 end
 
-%If there is candidate points in the belt region
+%If there are candidate points in the belt region
 intersectDistPtsCount2=intersectDistPtsCount;
 intersectDistPtsCount2(intersectDistPtsCount2>0)=1; %having value in belt -> 1
 
-% Detect the changing point in the dinstance to the nearest point (wing edge)
+% Detect the changing point in the distance to the nearest point (wing edge)
 intersectShortestDistDiff=diff(intersectShortestDist);
 intersectShortestDistDiff2=sign([intersectShortestDistDiff,0]);
-IdxLinear=findchangepts(intersectShortestDist,'MaxNumChanges',6,'Statistic','linear'); %THE NUMBER OF CHANGING PT here is sensitve to damaged wings. 6 is enough in most cases.
+IdxLinear=findchangepts(intersectShortestDist,'MaxNumChanges',6,'Statistic','linear'); %THE NUMBER OF CHANGING PT here is sensitive to damaged wings. 6 is enough in most cases.
 IdxStd=findchangepts(intersectShortestDist,'MaxNumChanges',6,'Statistic','std'); 
 intersectShortestDistDiff3=ones( [1,length(intersectShortestDist)] );
-intersectShortestDistDiff3([IdxLinear,IdxStd]-1)=2; %points shows the disconectivity to its neighbor
+intersectShortestDistDiff3([IdxLinear,IdxStd]-1)=2; %point shows the disconnectivity to its neighbor
 intersectShortestDistDiff4=intersectShortestDistDiff3;
 intersectShortestDistDiff4(intersectShortestDistDiff2.*intersectShortestDistDiff4<0)=0;
 
-% Detect the changing point of Number of segments
+% Detect the changing point of number of segments
 intersectSegCountDiff=diff(intersectSegCount);
 intersectSegCountDiff2=[intersectSegCountDiff,0];
-intersectSegCountDiff2(intersectSegCountDiff2<0)=-1; %The decrease of  segments represents the end of the front end edge
+intersectSegCountDiff2(intersectSegCountDiff2<0)=-1; %The decrease of segments represents the end of the front end edge
 
-%Use all three indicies to determine the target segment line
+%Use all three indices to determine the target segment line
 intersectLocList=find(intersectDistPtsCount2.*intersectSegCountDiff2.*intersectShortestDistDiff4<=-2);
 
 blockPts=cell(0,1);
@@ -216,7 +216,7 @@ end
 %     plot(beltR(:,1),beltR(:,2),'r')
 %     plot(Corners(:,1),Corners(:,2),'g*')
 
-%Pick the group that closest to the realCen
+%Pick the group that is closest to the realCen
 canPtlist=[];
 for gid=1:length(blockPts)
     avgPt=mean(blockPts{gid});
@@ -261,7 +261,7 @@ for segID=1:size(leftconjCorners1,1)
     internalDistList(segID)=internalDist;
 end
 
-%Pick the one having shortest distance to the symOrtho at realCen and the shortest distance to the opposite side of a specimen mask
+%Pick the one with the shortest distance to the symOrtho at realCen and the shortest distance to the opposite side of a specimen mask
 d2orthoVecIdx=d2orthoVec==min(d2orthoVec); %strict rule
 
 internalDistList2=sort(internalDistList);
@@ -275,14 +275,14 @@ tarIdx=d2orthoVecIdx.*internalIdx';
 
 if ~isempty(find(tarIdx))
     conjCorners0=leftconjCorners1(tarIdx,:);
-else %If no consensus in two index, then use the first rule
+else %If no consensus between two indices, then use the first rule
     conjCorners0=leftconjCorners1(d2orthoVecIdx,:);
 end
 
 conjCorners=findCloestPt([edgePt(:,2),edgePt(:,1)],conjCorners0); %Find the corresponding Pt on the real edge
 
 if ~isempty(conjCorners)
-    disp('Find the key point.');
+    disp('Found the key point.');
 else
     disp('DID NOT find the key point.');
 end

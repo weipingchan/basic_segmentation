@@ -8,7 +8,7 @@ function val=jsonopt(key,default,varargin)
 % authors:Qianqian Fang (q.fang <at> neu.edu)
 %
 % input:
-%      key: a string with which one look up a value from a struct
+%      key: a string with which one looks up a value from a struct
 %      default: if the key does not exist, return default
 %      optstruct: a struct where each sub-field is a key 
 %

@@ -1,6 +1,6 @@
 function calculateMorph2(spp_mat_directory,Code_directory,spp_json_directory,Result_directory,infilename,SphingidaeOrNot)
-%The variable SphingidaeOrNot only influence the preliminary visualization,
-%so it won't change the final result even when user specify 0 to a
+%The variable SphingidaeOrNot only influences the preliminary visualization,
+%so it won't change the final result even when the user specifies 0 to a
 %Sphingidae
 
 if size(spp_mat_directory,2)==1 spp_mat_directory=spp_mat_directory{1};, end;
@@ -65,32 +65,32 @@ clear sppmat;
 [realCen, symAxis, symOrtho, boundingBox,  tipPts, refPts, wingParts, WingAxesSlopes, tformWingImg, shapeImg, allComImg, allinfo]=wingShapePreprocessing2(template,flag,mask,spp_json_directory,Result_directory,subFolderList,side,SphingidaeOrNot);
 
 bodyTrimPx=5;
-antTrimPx=10; %Adjust this to extart bold antenna (e.g. some moths') if necessary
+antTrimPx=10; %Adjust this to extract bold antennae (e.g. some moths') if necessary
 [bodyMask, bodyCharacters, antennaMask,antennaCharacters]=body_antenna_module2(mask, wingParts, refPts, tipPts, bodyTrimPx, antTrimPx, scale);
 
-%Generate a segmentaion image for visualization
+%Generate a segmentation image for visualization
 segmented_img=zeros(size(bodyMask));
 segmented_img(mask==1)=7;
 segmented_img(antennaMask==1)=6;
 segmented_img(bodyMask==1)=5;
-if side==1 %In dorsal side, fore wings are dominant
+if side==1 %On dorsal side, forewings are dominant
     segmented_img(wingParts{2}==1)=3;
     segmented_img(wingParts{4}==1)=4;
     segmented_img(wingParts{1}==1)=1;
     segmented_img(wingParts{3}==1)=2;
-elseif side==2 %In ventral side, hind wings are dominant
+elseif side==2 %On ventral side, hindwings are dominant
     segmented_img(wingParts{1}==1)=2;
     segmented_img(wingParts{3}==1)=1;
     segmented_img(wingParts{2}==1)=4;
     segmented_img(wingParts{4}==1)=3;
 end 
 %0 is background
-%1 is left fore wing from dorsal side
-%2 is right fore wing from dorsal side
-%3 is left hind wing from dorsal side
-%4 is right hind wing from dorsal side
+%1 is left forewing from dorsal side
+%2 is right forewing from dorsal side
+%3 is left hindwing from dorsal side
+%4 is right hindwing from dorsal side
 %5 is body
-%6 is antenna
+%6 is antennae
 %7 is uncertain
 
 %Create visualization; reference: https://color.adobe.com/zh/explore
@@ -110,19 +110,19 @@ segmented_img_vis=label_segmentation_visualization(segmented_img,color_idx);
 morphinfo=cell(0,15);
 morphinfo{1}=mask; %Original mask
 morphinfo{2}=realCen; %Original centroid.
-morphinfo{3}=symAxis; %The vertical symatric axes
-morphinfo{4}=symOrtho; %The horizontal symatric axes
+morphinfo{3}=symAxis; %The vertical symmetric axis
+morphinfo{4}=symOrtho; %The horizontal symmetric axis
 morphinfo{5}=tipPts; %tips of forewings
 morphinfo{6}=refPts; %Important segment points
-morphinfo{7}=wingParts; %right and left X fore and hind wings. Total: 4
-morphinfo{8}=WingAxesSlopes; %Slopes for the front edge of fore wings and rare edge of hind wings
+morphinfo{7}=wingParts; %right and left X fore and hindwings. Total: 4
+morphinfo{8}=WingAxesSlopes; %Slopes for the front edge of forewings and rear edge of hindwings
 morphinfo{9}=tformWingImg; %Re-posed wings
-morphinfo{10}=shapeImg; %Re-posed fore-hind wings in the same panel and related points in new corrdinatios.
+morphinfo{10}=shapeImg; %Re-posed fore-hindwings in the same panel and related points in new coordinations.
 morphinfo{11}=allinfo; %Reference points before and after realignment
 morphinfo{12}=scale; %The scale bar (number of pixels = 1 cm)
-morphinfo{13}=segmented_img; %The segmentaion image for visualization
+morphinfo{13}=segmented_img; %The segmentation image for visualization
 morphinfo{14}=bodyCharacters; %The body length and width (in cm)
-morphinfo{15}=antennaCharacters; %Antennae length, width, bolb width, degree of curved (all in milimeter); first row is left one, second is right one.
+morphinfo{15}=antennaCharacters; %Antennae length, width, bolb width, degree of curvature (all in millimeters); first row is left one, second is right one.
 
 matoutname=fullfile(Result_directory,'Shape_analysis',subFolderList{7},[template,'_',vdlist{side},flag,'_morph-seg.mat']);
 save(matoutname,'morphinfo'); %save the specimen matrix
@@ -135,12 +135,12 @@ export_fig(figseg,segvisoutname, '-jpg','-r150');
 close(figseg);
 disp('An image showing img segmentation has been saved.');
 
-%Move those images having been analyzed to a subdirectory
+%Move those images that have been analyzed to a subdirectory
 finishedDir='done';
 if ~exist(fullfile(spp_mat_directory,finishedDir), 'dir')
     mkdir(fullfile(spp_mat_directory,finishedDir));
 end
 movefile(fullfile(spp_mat_directory,matinname),fullfile(spp_mat_directory,finishedDir));
-disp('Images analyzed have been moved to done directory.');
+disp('Analyzed images have been moved to done directory.');
 
 end

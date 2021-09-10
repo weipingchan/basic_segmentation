@@ -18,7 +18,7 @@ areaSumDiffSmo=smoothdata(areaSumDiff,'loess');
 areaSumDiff0=areaSumDiffSmo(1:end-1);
 areaSumDiff1=areaSumDiffSmo(2:end);
 areaSumDiffInclection=sign(areaSumDiff0.*areaSumDiff1);
-areaSumDiffPos=sort(find(areaSumDiff1>0)); %pick the positive slope of next point (indicating the valley point)
+areaSumDiffPos=sort(find(areaSumDiff1>0)); %pick the positive slope of the next point (indicating the valley point)
 candidates0=sort(find(areaSumDiffInclection<0));
 candidates=intersect(candidates0,areaSumDiffPos);
 if ~isempty(candidates)

@@ -65,7 +65,7 @@
 %                      for octave, the default value is an empty string ''.
 %         UseArrayZipSize: [1|0] if set to 1, _ArrayZipSize_ will be added to 
 %       	       store the "pre-processed" data dimensions, i.e.
-%       	       the original data stored in _ArrayData_, and then flaten
+%       	       the original data stored in _ArrayData_, and then flatten
 %       	       _ArrayData_ into a row vector using row-major
 %       	       order; if set to 0, a 2D _ArrayData_ will be used
 %         MapAsStruct: [0|1] if set to 1, convert containers.Map into
@@ -128,7 +128,7 @@
 %                         please set FormatVersion to 1
 %
 % output:
-%      newdata: the covnerted data if the input data does contain a JData 
+%      newdata: the converted data if the input data does contain a JData 
 %               structure; otherwise, the same as the input.
 %
 % examples:
@@ -164,7 +164,7 @@
 %      fname: input file name; if fname contains "{}" or "[]", fname
 %             will be interpreted as a JSON string
 %      opt: (optional) a struct to store parsing options, opt can be replaced by 
-%           a list of ('param',value) pairs - the param string is equivallent
+%           a list of ('param',value) pairs - the param string is equivalent
 %           to a field in opt. opt can have the following 
 %           fields (first in [.|.] is the default)
 %
@@ -313,7 +313,7 @@
 %                         the input data before saving
 %
 %        opt can be replaced by a list of ('param',value) pairs. The param 
-%        string is equivallent to a field in opt and is case sensitive.
+%        string is equivalent to a field in opt and is case-sensitive.
 % output:
 %      json: a string in the JSON format (see http://json.org)
 %
@@ -347,7 +347,7 @@
 %      fname: input file name, if fname contains "{}" or "[]", fname
 %             will be interpreted as a UBJSON string
 %      opt: a struct to store parsing options, opt can be replaced by 
-%           a list of ('param',value) pairs - the param string is equivallent
+%           a list of ('param',value) pairs - the param string is equivalent
 %           to a field in opt. opt can have the following 
 %           fields (first in [.|.] is the default)
 %
@@ -443,11 +443,11 @@
 %          JSONP [''|string]: to generate a JSONP output (JSON with padding),
 %                         for example, if opt.JSON='foo', the JSON data is
 %                         wrapped inside a function call as 'foo(...);'
-%          UnpackHex [1|0]: conver the 0x[hex code] output by loadjson 
+%          UnpackHex [1|0]: convert the 0x[hex code] output by loadjson 
 %                         back to the string form
 %          Compression  'zlib', 'gzip', 'lzma', 'lzip', 'lz4' or 'lz4hc': specify array 
 %                         compression method; currently only supports 6 methods. The
-%                         data compression only applicable to numerical arrays 
+%                         data compression is only applicable to numerical arrays 
 %                         in 3D or higher dimensions, or when ArrayToStruct
 %                         is 1 for 1D or 2D arrays. If one wants to
 %                         compress a long string, one must convert
@@ -474,7 +474,7 @@
 %                         the input data before saving
 %
 %        opt can be replaced by a list of ('param',value) pairs. The param 
-%        string is equivallent to a field in opt and is case sensitive.
+%        string is equivalent to a field in opt and is case-sensitive.
 % output:
 %      json: a binary string in the UBJSON format (see http://ubjson.org)
 %
@@ -955,7 +955,7 @@
 %              if the encoded variable name CAN NOT be longer than 63, i.e. 
 %              the maximum variable name specified by namelengthmax, and
 %              one uses the output of this function as a struct or variable
-%              name, the name will be trucated at 63. Please consider using
+%              name, the name will be truncated at 63. Please consider using
 %              the name as a containers.Map key, which does not have such
 %              limit.
 %
@@ -1072,7 +1072,7 @@
 %      endpos: if a matching bracket is found, return its position in the original 
 %              string
 %      maxlevel: return the depth of the enclosed brackets between the searched pair,
-%              includig the searching pair. For example, the matching closing-bracket 
+%              including the searching pair. For example, the matching closing-bracket 
 %              of the 1st square bracket (startpos=2) in  '[[[]],[]]' returns a 
 %              position of 9, with a maximum depth of 3; searching for the closing 
 %              bracket for the 2nd square bracket (startpos=3) returns a position of 
@@ -1135,7 +1135,7 @@
 % [dims, maxlevel, count] = nestbracket2dim(str,brackets)
 %
 % Extracting the dimension vector of a JSON string formatted array
-% by analyzing the pairs of opening/closing bracket tokenss; this function 
+% by analyzing the pairs of opening/closing bracket tokens; this function 
 % only returns valid dimension information when the array is an N-D array
 %
 %

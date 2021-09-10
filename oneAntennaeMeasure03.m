@@ -1,5 +1,5 @@
 function [bolbMorph,antFig,tipAntenae,tipAnt]=oneAntennaeMeasure03(mask, forkPt00, oneAntenae,antL0,antennaeBase0)
-%A funciton to measure the morphology of one antenna
+%A function to measure the morphology of one antenna
 
         antennae = oneAntenae;
         %%
@@ -63,7 +63,7 @@ function [bolbMorph,antFig,tipAntenae,tipAnt]=oneAntennaeMeasure03(mask, forkPt0
         meanW= antB.Area/antL;
         basetipdist=pdist([tipAnt;antennaeBase],'euclidean');
         curveDegree=antL/basetipdist;        
-        tipMask = createCirclesMask(mask, flip(tipAnt), antL/5);     %Create tip mask again (use 1/5 of total length), and use regionProp find width
+        tipMask = createCirclesMask(mask, flip(tipAnt), antL/5);     %Create tip mask again (use 1/5 of total length), and use regionProp to find width
         tipAntenae=bwareafilt(logical(immultiply(antennae,tipMask)),1);
         bolbB=regionprops(tipAntenae,'MinorAxisLength');
         bolbW=bolbB.MinorAxisLength;

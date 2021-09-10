@@ -107,8 +107,8 @@ if length(forehindCorner(forehindCorner(:,1)>0))<5
     [conjPt,forehindCorner,~]=findForeHindCorner(nStrongCornersList,nSectionList,maskf,realCen,symAxis,ulCornerDV,boundingBoxDV,slopeSwitch);
 end
 forehindCornerL=conjPt;
-disp('The corner between left fore and hindwings has been found.');
-disp('Begin to find the corner between right fore and hindwings.');
+disp('The corner between left fore and hind wings has been found.');
+disp('Begin to find the corner between right fore and hind wings.');
 
 slopeSwitch='wingEdge';
 [conjPt,forehindCorner,~]=findForeHindCorner(nStrongCornersList,nSectionList,maskf,realCen,symAxis,lrCornerDV,boundingBoxDV,slopeSwitch);
@@ -117,8 +117,8 @@ if length(forehindCorner(forehindCorner(:,1)>0))<5
     [conjPt,forehindCorner,~]=findForeHindCorner(nStrongCornersList,nSectionList,maskf,realCen,symAxis,lrCornerDV,boundingBoxDV,slopeSwitch);
 end
 forehindCornerR=conjPt;
-disp('The corner between right fore and hindwings has been found.');
-disp('########## Two corners between fore and hindwings have been found. #########');
+disp('The corner between right fore and hind wings has been found.');
+disp('########## Two corners between fore and hind wings are found. #########');
 %%
 %Show the inspection image
 maskoutname1=fullfile(Result_directory,'Shape_analysis',subFolderList{1},[template,'_',vdlist{side},flag,'_check_img.png']);
@@ -133,14 +133,14 @@ line(dim_2plot(1,:),dim_2plot(2,:), 'Color', 'b' ,'LineStyle','--','LineWidth', 
 hold off;
 export_fig(figmask1,maskoutname1, '-png','-r150');
 close(figmask1);
-disp('An image indicating the mask and fore-hindwing corners has been saved.');
+disp('An image indicating the mask and fore hind wing corners has been saved.');
 %%
 %Find best beltWpar
 disp('Start to find the optimal body width parameter.');
 beltWpar=findbeltWpar(maskf,forehindCornerL,forehindCornerR,realCen,boundingBox);
 disp('The body width parameter has been found.');
 %%
-disp('Start to crop upper and lower masks based on the fore-hindwing corners.');
+disp('Start to crop upper and lower mask based on the fore-hind wing corners.');
 upperSegMaskPts=[[0,0];[size(maskf,2),0];forehindCornerR;realCen;forehindCornerL];
 upperSegMask = poly2mask(round(upperSegMaskPts(:,1)),round(upperSegMaskPts(:,2)),size(maskf,1),size(maskf,2));
 upperMask=immultiply(maskf,upperSegMask);
@@ -148,36 +148,36 @@ upperMask=immultiply(maskf,upperSegMask);
 lowerSegMaskPts=[[0,size(maskf,1)];[size(maskf,2),size(maskf,1)];forehindCornerR;realCen;forehindCornerL];
 lowerSegMask = poly2mask(round(lowerSegMaskPts(:,1)),round(lowerSegMaskPts(:,2)),size(maskf,1),size(maskf,2));
 lowerMask=immultiply(maskf,lowerSegMask);
-disp('Upper and lower masks have been cropped out based on the fore-hindwing corners.');
+disp('Upper and lower mask have been cropped out based on the fore-hind wing corners.');
 
 %%
 disp('########## Start to find the corner between wing and body. ##########');
-disp('Begin to find the corner between the left forewing and the body.');
-%Left forewing
+disp('Begin to find the corner between the left fore wing and the body.');
+%Left fore wing
 nStrongCornersList=[1000,1500,2000,3000,4000]; %shorter trail list can be applicable: [1000,1500,2000,4000];
-nSectionList=reshape( [[20:4:50];[50:-4:20]],1,[]); %use a mix parameter lists low-high + high-low to search for better results
+nSectionList=reshape( [[20:4:50];[50:-4:20]],1,[]); %use a mix parameter lists low-high + high-low to searching for better results
 [conjPt, conjCorners]=findBodyWingCorner2(nStrongCornersList,nSectionList,upperMask,realCen,symAxis,forehindCornerL,'LF',boundingBox,beltWpar,maskf);
 conjCornerLF=conjPt;
-disp('The corner between the left forewing and body has been found.');
+disp('The corner between the left fore wing and body has been found.');
 
-disp('Begin to find the corner between the right forewing and the body.');
-%Right forewing
+disp('Begin to find the corner between the right fore wing and the body.');
+%Right fore wing
 [conjPt, conjCorners]=findBodyWingCorner2(nStrongCornersList,nSectionList,upperMask,realCen,symAxis,forehindCornerR,'RF',boundingBox,beltWpar,maskf);
 conjCornerRF=conjPt;
-disp('The corner between the right forewing and the body has been found.');
+disp('The corner between the right fore wing and the body has been found.');
 
-disp('Begin to find the corner between the left hindwing and the body.');
-%Left hindwing
+disp('Begin to find the corner between the left hind wing and the body.');
+%Left hind wing
 nSectionList=[20:4:40]; %number of elements in the list should greater than 4
 [conjPt, conjCorners]=findBodyWingCorner2(nStrongCornersList,nSectionList,lowerMask,realCen,symAxis,forehindCornerL,'LH',boundingBox,beltWpar,maskf);
 conjCornerLH=conjPt;
-disp('The corner between the left hindwing and the body has been found.');
+disp('The corner between the left hind wing and the body has been found.');
 
-disp('Begin to find the corner between the right hindwing and the body.');
-%Right hindwing
+disp('Begin to find the corner between the right hind wing and the body.');
+%Right hind wing
 [conjPt, conjCorners]=findBodyWingCorner2(nStrongCornersList,nSectionList,lowerMask,realCen,symAxis,forehindCornerR,'RH',boundingBox,beltWpar,maskf);
 conjCornerRH=conjPt;
-disp('The corner between the right hindwing and the body has been found.');
+disp('The corner between the right hind wing and the body has been found.');
 disp('########## All landmark corners are found. ##########');
 
 %Integrate the landmark points: (Left-ForeHind Corner, Left-Fore-Body corner, Right-Fore-Body corner, Right-Fore-Hind Corner,Right-Hind-Body corner, Left-Hind-Body corner)
@@ -191,14 +191,14 @@ disp('########## Start to find the slope of long axes of wings. ##########');
 disp('########## The slope of long axes of wings has been determined. ##########');
 %%%%%%%%%%%%%%%Special Region For Sphingidae%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%For Sphingidae use this approach to derive the wingAxesSlopes (no hindwing rotation)
+%For Sphingidae use this approach to derive the wingAxesSlopes (no hind wing rotation)
 %Sphingidae=1; %1: Sphingidae; 0: not Sphingidae
 %This argument won't influence the final result. It only changes the
 %visualization of preliminary analysis
 if Sphingidae==1
     WingAxesSlopes(2)=0;
     WingAxesSlopes(4)=0;
-    disp('The rotation of hindwings will not be corrected for Sphingidae.');
+    disp('The rotation of hind wings will not be corrected for Sphingidae.');
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%Special Region For Sphingidae%%%%%%%%%%%%%%%
@@ -224,7 +224,7 @@ plot(tipPts(:,1),tipPts(:,2),'y+','LineWidth', 1);
 hold off;
 export_fig(figchar,charoutname, '-png','-r150');
 close(figchar);
-disp('An image indicating all key characters of the specimen image has been saved.');
+disp('An image indicating all key characters of specimen image has been saved.');
 %%
 disp('########## Start to chop four wing parts out of the image. ##########');
 %find if there is a corresponding json file
@@ -257,10 +257,10 @@ disp('########## Start to rotate each wing part. ##########');
 [tformWingImg, tformPtData]=wingRotation(wingParts,WingAxesSlopes,refPts);
 disp('########## The rotation of all wings has been finished. ##########');
 
-disp('########## Start to compose forewings and hindwings. ##########');
-%rotate and normalize the position of a pair of forewings and hindwings
+disp('########## Start to compose fore wing and hind wing. ##########');
+%rotate and normalize the position of a pair of fore wings and hind wings
 shapeImg=combineForeHindWings(tformWingImg,tformPtData);
-disp('########## Forewings and hindwings have been composed. ##########');
+disp('########## fore wing and hind wing have been composed. ##########');
 
 disp('########## Start to integrate 4 wings into 1 panel. ##########');
 [allComImg, allinfo]=integrate4WingsInto1Panel(shapeImg,tformWingImg,refPts);

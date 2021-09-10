@@ -1,5 +1,5 @@
 function label_matrix_vis=label_segmentation_visualization(label_matrix,color_idx)
-        %Create visuallization of segemntation in RGB format
+        %Create visualization of segementation in RGB format
         label_matrix_visR=zeros(size(label_matrix));
         label_matrix_visG=zeros(size(label_matrix));
         label_matrix_visB=zeros(size(label_matrix));

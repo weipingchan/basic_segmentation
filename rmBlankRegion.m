@@ -1,5 +1,5 @@
 function [NewImg,NewOrigion]=rmBlankRegion(inImg,bufferWidth)
-%Remove redundent black regions near the edge of an object
+%Remove redundant black regions near the edge of an object
     bwInImg=imbinarize(grayImg(inImg));
     BbwIn=regionprops(uint8(bwInImg),'BoundingBox'); %The center of the bounding box
     boundingBoxbwIn=round(BbwIn.BoundingBox);

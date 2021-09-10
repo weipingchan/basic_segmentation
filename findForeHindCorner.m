@@ -1,5 +1,5 @@
 function [conjPt, forehindCorner,beltHpar] =findForeHindCorner(nStrongCornersList,nSectionList,mask,realCen,symAxis,tarCorner,boundingBox,slopeSwitch)
-%A funciton searching through different parameters for better detecting the
+%A function searching through different parameters to better detect the
 %gap between fore and hindwings.
 beltHparList=[0.2:0.01:0.25];
 beltHpars=[];
@@ -71,11 +71,11 @@ nsecn=1;
         end
         %%
         if nnz(forehindCorner(:,1))>=13
-            disp([num2str(nStrongCorners),' interesting points WORKS.']);
+            disp([num2str(nStrongCorners),' interesting points WORK.']);
             disp(['Parameter [nStrongCorners]: ',num2str(nStrongCorners)]);
             break
         else
-            disp([num2str(nStrongCorners),' interesting points does not work.']);
+            disp([num2str(nStrongCorners),' interesting points do not work.']);
         end
     end
     
@@ -83,7 +83,7 @@ nsecn=1;
     beltHpar=max(beltHpars);
         
     %If still cannot find the segment corner, use the horizontal vector to
-    %asign one unideal point
+    %assign one unideal point
     if isempty(forehindCorner)
         %Calculate necessary vectors
         symOrtho=reshape(null(symAxis(:).'),1,[]);

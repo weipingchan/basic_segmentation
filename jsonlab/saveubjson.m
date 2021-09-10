@@ -58,11 +58,11 @@ function json=saveubjson(rootname,obj,varargin)
 %          JSONP [''|string]: to generate a JSONP output (JSON with padding),
 %                         for example, if opt.JSON='foo', the JSON data is
 %                         wrapped inside a function call as 'foo(...);'
-%          UnpackHex [1|0]: conver the 0x[hex code] output by loadjson 
+%          UnpackHex [1|0]: convert the 0x[hex code] output by loadjson 
 %                         back to the string form
 %          Compression  'zlib', 'gzip', 'lzma', 'lzip', 'lz4' or 'lz4hc': specify array 
 %                         compression method; currently only supports 6 methods. The
-%                         data compression only applicable to numerical arrays 
+%                         data compression is only applicable to numerical arrays 
 %                         in 3D or higher dimensions, or when ArrayToStruct
 %                         is 1 for 1D or 2D arrays. If one wants to
 %                         compress a long string, one must convert
@@ -89,7 +89,7 @@ function json=saveubjson(rootname,obj,varargin)
 %                         the input data before saving
 %
 %        opt can be replaced by a list of ('param',value) pairs. The param 
-%        string is equivallent to a field in opt and is case sensitive.
+%        string is equivalent to a field in opt and is case-sensitive.
 % output:
 %      json: a binary string in the UBJSON format (see http://ubjson.org)
 %
@@ -634,7 +634,7 @@ try
     else
             propertynames = properties(item);
             for p = 1:numel(propertynames)
-                for o = numel(item):-1:1 % aray of objects
+                for o = numel(item):-1:1 % array of objects
                     st(o).(propertynames{p}) = item(o).(propertynames{p});
                 end
             end

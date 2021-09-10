@@ -9,7 +9,7 @@ try
 catch
     beltWpar0=0.2;
 end
-%make sure the minimal beltWpar greater than 0.2
+%make sure the minimal beltWpar is greater than 0.2
 if beltWpar0<0.2 || beltWpar0>0.4
     beltWpar =0.2;
 else

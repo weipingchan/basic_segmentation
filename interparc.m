@@ -22,13 +22,13 @@ function [pt,dudt,fofthandle] = interparc(t,px,py,varargin)
 %        curve is interpolated by a parametric spline.
 %
 %        If t is a scalar integer, at least 2, then
-%        it specifies the number of equally spaced
+%        it specifies the number of equally-spaced
 %        points in arclength to be generated along
 %        the curve.
 %
 %  px, py, pz, ... - vectors of length n, defining
 %        points along the curve. n must be at least 2.
-%        Exact Replicate points should not be present
+%        Exact replicate points should not be present
 %        in the curve, although there is no constraint
 %        that the curve has replicate independent
 %        variables.
@@ -64,7 +64,7 @@ function [pt,dudt,fofthandle] = interparc(t,px,py,varargin)
 %               That is, the first point will be replicated
 %               onto the end.
 %
-%               If csape is not present in your matlab release,
+%               If csape is not present in your Matlab release,
 %               then an error will result.
 %
 %        DEFAULT: 'spline'
@@ -86,8 +86,8 @@ function [pt,dudt,fofthandle] = interparc(t,px,py,varargin)
 %       will be clipped to the endpoints of the curve.
 %
 % Example:
-% % Interpolate a set of unequally spaced points around
-% % the perimeter of a unit circle, generating equally
+% % Interpolate a set of unequally-spaced points around
+% % the perimeter of a unit circle, generating equally-
 % % spaced points around the perimeter.
 % theta = sort(rand(15,1))*2*pi;
 % theta(end+1) = theta(1);
@@ -131,7 +131,7 @@ function [pt,dudt,fofthandle] = interparc(t,px,py,varargin)
 % %        1.0001
 % %             1
 %
-% % Unwrap the polar angles, and difference them.
+% % Unwrap the polar angles, and differentiate them.
 % diff(unwrap(TH))
 % % ans =
 % %        1.2541

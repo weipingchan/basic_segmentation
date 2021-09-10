@@ -1,6 +1,6 @@
 function [bolbMorph,antFig]=twoAntennaMeasure5(mask, body, antenna1,distanceAnt0,forkPt00, bodyraw, upperSegMask, scalelen)
-%A function to identify two anteaane and measure the morphology
-%Try different size of head mask until two antenae disconnected to each other
+%A function to identify two antennae and measure the morphology
+%Try different sizes of head mask until two antennae are disconnected from each other
             radii=10;
             while 1
                 Cmask = createCirclesMask(mask, forkPt00, radii);
@@ -8,7 +8,7 @@ function [bolbMorph,antFig]=twoAntennaMeasure5(mask, body, antenna1,distanceAnt0
                 cAntenna00=bwareaopen(immultiply(antenna1,revCmask),100);
                 cAntenna0=immultiply(logical(bwareaopen(immultiply(cAntenna00, upperSegMask),200)),  imcomplement(bodyraw));
                 [labeledAntenna0, numberOfBlobs0] = bwlabel(cAntenna0);                
-                if numberOfBlobs0>2 %if there are more than two objects, take the to closer to the top
+                if numberOfBlobs0>2 %if there are more than two objects, take the two closer to the top
                     poslist=[];
                     for k0=1:numberOfBlobs0
                         obj=ismember(labeledAntenna0, k0);
@@ -19,7 +19,7 @@ function [bolbMorph,antFig]=twoAntennaMeasure5(mask, body, antenna1,distanceAnt0
                     idxlist=[];
                      for ii=1:2
                       [~,idx] = min(poslist0);
-                      % remove for the next iteration the last smallest value:
+                      % remove for the next iteration the smallest value:
                       poslist0(idx) = 9999;
                       idxlist=[idxlist,idx];
                      end                   
@@ -40,7 +40,7 @@ function [bolbMorph,antFig]=twoAntennaMeasure5(mask, body, antenna1,distanceAnt0
                 end
             end
 
-            if flag==0 %successfully finsih the previous step
+            if flag==0 %successfully finish the previous step
                 It = bwmorph(antenna1,'thin','inf');
                 [Bbx,Bby] =  find(bwmorph(It,'branchpoints'));
                 %select branch point and convert to index
@@ -55,10 +55,10 @@ function [bolbMorph,antFig]=twoAntennaMeasure5(mask, body, antenna1,distanceAnt0
                     distanceAnt=[distanceAnt; [i(n),j(n),Dd(i(n),j(n))]];
                 end         
                 %%
-                 try %prevent protential error and interoption
+                 try %prevent potential error and interruption
                     %%
                     if size(distanceAnt,1)>2
-                        %Cluster points having long distance to the fork
+                        %Cluster points with long distance to the fork
                         Dist0=sqrt(sum(bsxfun(@minus, distanceAnt0(:,1:2), flip(forkPt00)).^2,2));
                         Dist = sqrt(sum(bsxfun(@minus, distanceAnt(:,1:2), flip(forkPt00)).^2,2));
                         antennaTipDist0= sortrows(distanceAnt(Dist>mean(Dist0)+std(Dist0)*1/2,:),2); %first one is the left one
@@ -94,15 +94,15 @@ function [bolbMorph,antFig]=twoAntennaMeasure5(mask, body, antenna1,distanceAnt0
                     %%
                         bondAnt = bwboundaries(oneAntenae);
                         if size(antennaTipDist,1)==2
-                            d2pt1=mean(sqrt(sum(bsxfun(@minus, bondAnt{1}, antennaTipDist(1,1:2)).^2,2))); %Left antennae
-                            d2pt2=mean(sqrt(sum(bsxfun(@minus, bondAnt{1}, antennaTipDist(2,1:2)).^2,2))); %Right antennae
+                            d2pt1=mean(sqrt(sum(bsxfun(@minus, bondAnt{1}, antennaTipDist(1,1:2)).^2,2))); %Left antenna
+                            d2pt2=mean(sqrt(sum(bsxfun(@minus, bondAnt{1}, antennaTipDist(2,1:2)).^2,2))); %Right antenna
                             if d2pt1<d2pt2
                                 rfAnt=1;
                             else
                                 rfAnt=2;
                             end
                         else
-                            %Use one antennae module to judge if the antennae is the right side or left side
+                            %Use one antenna module to judge if the antenna is the right side or left side
                             ss01 = bondAnt{1};
                             antCens=mean(ss01);
                             if antCens(1)<forkPt00(1) %Use forkPt00 to replace realCen
@@ -160,13 +160,13 @@ function [bolbMorph,antFig]=twoAntennaMeasure5(mask, body, antenna1,distanceAnt0
                     clear('antL');
                 end
                 antFig=double(mask*0.1+ (antFig2{1}+antFig2{2})*0.8);
-            else %There is actually no antennae
-                disp('Ops! There is actually NO antennae found.');
+            else %There are actually no antennae
+                disp('Oops! There are actually NO antennae found.');
                 bolbMorph=-9999 + zeros(2, 4);
                 antFig=double(mask*0.1);
             end
             %%
-            %The scripts below is prepared for visualization when debugging
+            %The script below is prepared for visualization when debugging
 %                 %Plot antenna
 %                 antFigv=figure;
 %                 imshow(labeloverlay(double(mask*0.1+(antFig2{1}+antFig2{2})*0.5),It,'Colormap','autumn','Transparency',0));hold on;
